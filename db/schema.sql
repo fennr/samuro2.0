@@ -245,7 +245,7 @@ comment on table event_log is 'Все записи о проведенных м�
 
 create table IF NOT EXISTS players_stats
 (
-    id        discord_id                                     not null
+    id        bigint                                     not null
         constraint players_stats_players_id_fk
             references players
             on delete cascade,
@@ -265,7 +265,7 @@ comment on table players_stats is 'Данные о победах и пораж�
 
 create table IF NOT EXISTS vote_log
 (
-    id       discord_id,
+    id       bigint,
     event_id integer
         constraint vote_log_event_history_event_id_fk
             references event_history (event_id)
@@ -279,7 +279,7 @@ comment on table vote_log is 'Таблица статистики по голо�
 
 create table IF NOT EXISTS votes
 (
-    id       discord_id,
+    id       bigint,
     event_id integer
         constraint votes_eventhistory_event_id_fk
             references "event_history" (event_id)
