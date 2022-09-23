@@ -1,0 +1,38 @@
+[tool.black]
+line-length = 120
+target-version = ["py310"]
+include = ".*py$"
+
+[tool.isort]
+profile = "black"
+force_single_line = true
+
+[tool.poetry]
+name = "samurobot"
+version = "0.1.0" # I do not actually update this, lol
+description = "Your friendly neighbourhood multi-purpose Discord bot."
+authors = ["Fenrir <fenrir1121@gmail.com>"]
+license = "GNU GPL-v3"
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.11"
+# Change dateparser to 1.1.1 due to broken dependency issue
+dateparser = {git = "https://github.com/scrapinghub/dateparser.git", tag="v1.1.1"}
+psutil = "^5.9.1"
+Pillow = "^9.1.1"
+asyncpg = "^0.26.0"
+Levenshtein = "^0.18.1"
+uvloop = {version = "==0.16.0", platform="linux"}
+aiodns = "~=3.0"
+Brotli = "~=1.0"
+kosu = {git = "https://github.com/HyperGH/kosu.git", branch="main"}
+hikari-lightbulb = {git = "https://github.com/HyperGH/hikari-lightbulb.git", branch="development"}
+hikari-miru = {git = "https://github.com/HyperGH/hikari-miru.git", branch="cursed/branch"}
+
+[tool.poetry.dev-dependencies]
+black = "^22.6"
+isort = "^5.10.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

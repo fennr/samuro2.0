@@ -1,0 +1,36 @@
+services:
+
+  samuro-db:
+    image: postgres:${POSTGRES_VERSION:-14}
+    restart: always
+    expose:
+      - $POSTGRES_PORT:-5432
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-samuro}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?err}
+    volumes:
+     - postgres_data:/var/lib/postgresql/data
+    networks:
+      - private
+
+  samuro:
+    build:
+        context: .
+        dockerfile: Dockerfile
+        args:
+          postgres_version: ${POSTGRES_VERSION:-14}
+    command: ["python3.10", "-O", "main.py"]
+    depends_on:
+      - samuro-db
+    restart: always
+    networks:
+      - private
+
+networks:
+  private:
+    external: false
+
+volumes:
+  postgres_data:

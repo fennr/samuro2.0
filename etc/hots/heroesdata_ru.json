@@ -1,0 +1,1000 @@
+{
+    "Abathur": {
+        "name_id": "Abathur",
+        "name_en": "Abathur",
+        "name_ru": "Абатур",
+        "name_json": "abathur.json",
+        "role": "Support",
+        "tier": "C",
+        "nick": [
+            ""
+        ]
+    },
+    "Alarak": {
+        "name_id": "Alarak",
+        "name_en": "Alarak",
+        "name_ru": "Аларак",
+        "name_json": "alarak.json",
+        "role": "Melee Assassin",
+        "tier": "C",
+        "nick": [
+            ""
+        ]
+    },
+    "Alexstrasza": {
+        "name_id": "Alexstrasza",
+        "name_en": "Alexstrasza",
+        "name_ru": "Алекстраза",
+        "name_json": "alexstrasza.json",
+        "role": "Healer",
+        "tier": "B",
+        "nick": [
+            ""
+        ]
+    },
+    "Ana": {
+        "name_id": "Ana",
+        "name_en": "Ana",
+        "name_ru": "Ана",
+        "name_json": "ana.json",
+        "role": "Healer",
+        "tier": "B",
+        "nick": [
+        ]
+    },
+    "Anduin": {
+        "name_id": "Anduin",
+        "name_en": "Anduin",
+        "name_ru": "Андуин",
+        "name_json": "anduin.json",
+        "role": "Healer",
+        "tier": "A",
+        "nick": [
+            ""
+        ]
+    },
+    "Anubarak": {
+        "name_id": "Anubarak",
+        "name_en": "Anub'arak",
+        "name_ru": "АнубАрак",
+        "name_json": "anubarak.json",
+        "role": "Tank",
+        "tier": "A",
+        "nick": [
+            "Ануб"
+        ]
+    },
+    "Artanis": {
+        "name_id": "Artanis",
+        "name_en": "Artanis",
+        "name_ru": "Артанис",
+        "name_json": "artanis.json",
+        "role": "Bruiser",
+        "tier": "B",
+        "nick": [
+            ""
+        ]
+    },
+    "Arthas": {
+        "name_id": "Arthas",
+        "name_en": "Arthas",
+        "name_ru": "Артас",
+        "name_json": "arthas.json",
+        "role": "Tank",
+        "tier": "B",
+        "nick": [
+            ""
+        ]
+    },
+    "Auriel": {
+        "name_id": "Auriel",
+        "name_en": "Auriel",
+        "name_ru": "Ауриэль",
+        "name_json": "auriel.json",
+        "role": "Healer",
+        "tier": "B",
+        "nick": [
+            ""
+        ]
+    },
+    "Azmodan": {
+        "name_id": "Azmodan",
+        "name_en": "Azmodan",
+        "name_ru": "Азмодан",
+        "name_json": "azmodan.json",
+        "role": "Ranged Assassin",
+        "tier": "A",
+        "nick": [
+            ""
+        ]
+    },
+    "Firebat": {
+        "name_id": "Firebat",
+        "name_en": "Blaze",
+        "name_ru": "Блэйз",
+        "name_json": "blaze.json",
+        "role": "Tank",
+        "tier": "B",
+        "nick": [
+            "Пожарник"
+        ]
+    },
+    "FaerieDragon": {
+        "name_id": "FaerieDragon",
+        "name_en": "Brightwing",
+        "name_ru": "Светик",
+        "name_json": "brightwing.json",
+        "role": "Healer",
+        "tier": "A",
+        "nick": [
+            "Бв"
+        ]
+    },
+    "Amazon": {
+        "name_id": "Amazon",
+        "name_en": "Cassia",
+        "name_ru": "Кассия",
+        "name_json": "cassia.json",
+        "role": "Ranged Assassin",
+        "tier": "B",
+        "nick": [
+            "Амазонка"
+        ]
+    },
+    "Chen": {
+        "name_id": "Chen",
+        "name_en": "Chen",
+        "name_ru": "Чень",
+        "name_json": "chen.json",
+        "role": "Bruiser",
+        "tier": "B",
+        "nick": [
+        ]
+    },
+    "Cho": {
+        "name_id": "Cho",
+        "name_en": "Cho",
+        "name_ru": "ЧоГалл",
+        "name_json": "chogall.json",
+        "role": "Tank",
+        "tier": "B",
+        "nick": [
+            "Чо"
+        ]
+    },
+    "Chromie": {
+        "name_id": "Chromie",
+        "name_en": "Chromie",
+        "name_ru": "Хроми",
+        "name_json": "chromie.json",
+        "role": "Ranged Assassin",
+        "tier": "B",
+        "nick": [
+        ]
+    },
+    "Deathwing": {
+        "name_id": "Deathwing",
+        "name_en": "Deathwing",
+        "name_ru": "Смертокрыл",
+        "name_json": "deathwing.json",
+        "role": "Bruiser",
+        "tier": "B",
+        "nick": [
+        ]
+    },
+    "Deckard": {
+        "name_id": "Deckard",
+        "name_en": "Deckard",
+        "name_ru": "Декард Каин",
+        "name_json": "deckard.json",
+        "role": "Healer",
+        "tier": "B",
+        "nick": [
+            "Декард"
+        ]
+    },
+    "Dehaka": {
+        "name_id": "Dehaka",
+        "name_en": "Dehaka",
+        "name_ru": "Дехака",
+        "name_json": "dehaka.json",
+        "role": "Bruiser",
+        "tier": "A",
+        "nick": [
+            ""
+        ]
+    },
+    "Diablo": {
+        "name_id": "Diablo",
+        "name_en": "Diablo",
+        "name_ru": "Диабло",
+        "name_json": "diablo.json",
+        "role": "Tank",
+        "tier": "A",
+        "nick": [
+            ""
+        ]
+    },
+    "DVa": {
+        "name_id": "DVa",
+        "name_en": "D.Va",
+        "name_ru": "Дива",
+        "name_json": "dva.json",
+        "role": "Bruiser",
+        "tier": "B",
+        "nick": [
+            "Дива"
+        ]
+    },
+    "L90ETC": {
+        "name_id": "L90ETC",
+        "name_en": "E.T.C.",
+        "name_ru": "ETC",
+        "name_json": "etc.json",
+        "role": "Tank",
+        "tier": "C",
+        "nick": [
+            "Етц"
+        ]
+    },
+    "Falstad": {
+        "name_id": "Falstad",
+        "name_en": "Falstad",
+        "name_ru": "Фалстад",
+        "name_json": "falstad.json",
+        "role": "Ranged Assassin",
+        "tier": "A",
+        "nick": [
+        ]
+    },
+    "Fenix": {
+        "name_id": "Fenix",
+        "name_en": "Fenix",
+        "name_ru": "Феникс",
+        "name_json": "fenix.json",
+        "role": "Ranged Assassin",
+        "tier": "B",
+        "nick": [
+            ""
+        ]
+    },
+    "Gall": {
+        "name_id": "Gall",
+        "name_en": "Gall",
+        "name_ru": "Галл",
+        "name_json": "gall.json",
+        "role": "Ranged Assassin",
+        "tier": "B",
+        "nick": [
+            ""
+        ]
+    },
+    "Garrosh": {
+        "name_id": "Garrosh",
+        "name_en": "Garrosh",
+        "name_ru": "Гаррош",
+        "name_json": "garrosh.json",
+        "role": "Tank",
+        "tier": "A",
+        "nick": [
+        ]
+    },
+    "Tinker": {
+        "name_id": "Tinker",
+        "name_en": "Gazlowe",
+        "name_ru": "Газлоу",
+        "name_json": "gazlowe.json",
+        "role": "Bruiser",
+        "tier": "B",
+        "nick": [
+            "Газик"
+        ]
+    },
+    "Genji": {
+        "name_id": "Genji",
+        "name_en": "Genji",
+        "name_ru": "Гэндзи",
+        "name_json": "genji.json",
+        "role": "Ranged Assassin",
+        "tier": "C",
+        "nick": [
+            ""
+        ]
+    },
+    "Greymane": {
+        "name_id": "Greymane",
+        "name_en": "Greymane",
+        "name_ru": "Седогрив",
+        "name_json": "greymane.json",
+        "role": "Ranged Assassin",
+        "tier": "B",
+        "nick": [
+            ""
+        ]
+    },
+    "Guldan": {
+        "name_id": "Guldan",
+        "name_en": "Gul'dan",
+        "name_ru": "Гулдан",
+        "name_json": "guldan.json",
+        "role": "Ranged Assassin",
+        "tier": "A",
+        "nick": [
+            ""
+        ]
+    },
+    "Hanzo": {
+        "name_id": "Hanzo",
+        "name_en": "Hanzo",
+        "name_ru": "Хандзо",
+        "name_json": "hanzo.json",
+        "role": "Ranged Assassin",
+        "tier": "B",
+        "nick": [
+            ""
+        ]
+    },
+    "Hogger": {
+        "name_id": "Hogger",
+        "name_en": "Hogger",
+        "name_ru": "Дробитель",
+        "name_json": "hogger.json",
+        "role": "Bruiser",
+        "tier": "B",
+        "nick": [
+            "Хогер"
+        ]
+    },
+    "Illidan": {
+        "name_id": "Illidan",
+        "name_en": "Illidan",
+        "name_ru": "Иллидан",
+        "name_json": "illidan.json",
+        "role": "Melee Assassin",
+        "tier": "C",
+        "nick": [
+            ""
+        ]
+    },
+    "Imperius": {
+        "name_id": "Imperius",
+        "name_en": "Imperius",
+        "name_ru": "Империй",
+        "name_json": "imperius.json",
+        "role": "Bruiser",
+        "tier": "B",
+        "nick": [
+            ""
+        ]
+    },
+    "Jaina": {
+        "name_id": "Jaina",
+        "name_en": "Jaina",
+        "name_ru": "Джайна",
+        "name_json": "jaina.json",
+        "role": "Ranged Assassin",
+        "tier": "A",
+        "nick": [
+            ""
+        ]
+    },
+    "Crusader": {
+        "name_id": "Crusader",
+        "name_en": "Johanna",
+        "name_ru": "Джоанна",
+        "name_json": "johanna.json",
+        "role": "Tank",
+        "tier": "S",
+        "nick": [
+            ""
+        ]
+    },
+    "Junkrat": {
+        "name_id": "Junkrat",
+        "name_en": "Junkrat",
+        "name_ru": "Крысавчик",
+        "name_json": "junkrat.json",
+        "role": "Ranged Assassin",
+        "tier": "A",
+        "nick": [
+            ""
+        ]
+    },
+    "Kaelthas": {
+        "name_id": "Kaelthas",
+        "name_en": "Kael'thas",
+        "name_ru": "КельТас",
+        "name_json": "kaelthas.json",
+        "role": "Ranged Assassin",
+        "tier": "B",
+        "nick": [
+            "Кель",
+            "Инвокер"
+        ]
+    },
+    "KelThuzad": {
+        "name_id": "KelThuzad",
+        "name_en": "Kel'Thuzad",
+        "name_ru": "КелТузад",
+        "name_json": "kelthuzad.json",
+        "role": "Ranged Assassin",
+        "tier": "C",
+        "nick": [
+            "Ктз",
+            "Келтузед",
+            "Ktz"
+        ]
+    },
+    "Kerrigan": {
+        "name_id": "Kerrigan",
+        "name_en": "Kerrigan",
+        "name_ru": "Керриган",
+        "name_json": "kerrigan.json",
+        "role": "Melee Assassin",
+        "tier": "B",
+        "nick": [
+            ""
+        ]
+    },
+    "Monk": {
+        "name_id": "Monk",
+        "name_en": "Kharazim",
+        "name_ru": "Каразим",
+        "name_json": "kharazim.json",
+        "role": "Healer",
+        "tier": "B",
+        "nick": [
+            "Монк"
+        ]
+    },
+    "Leoric": {
+        "name_id": "Leoric",
+        "name_en": "Leoric",
+        "name_ru": "Леорик",
+        "name_json": "leoric.json",
+        "role": "Bruiser",
+        "tier": "B",
+        "nick": [
+            ""
+        ]
+    },
+    "LiLi": {
+        "name_id": "LiLi",
+        "name_en": "Li Li",
+        "name_ru": "Лили",
+        "name_json": "lili.json",
+        "role": "Healer",
+        "tier": "B",
+        "nick": [
+            ""
+        ]
+    },
+    "Wizard": {
+        "name_id": "Wizard",
+        "name_en": "Li-Ming",
+        "name_ru": "Ли-Минг",
+        "name_json": "liming.json",
+        "role": "Ranged Assassin",
+        "tier": "A",
+        "nick": [
+            ""
+        ]
+    },
+    "LostVikings": {
+        "name_id": "LostVikings",
+        "name_en": "The Lost Vikings",
+        "name_ru": "Потерявшиеся викинги",
+        "name_json": "lostviking.json",
+        "role": "Support",
+        "tier": "C",
+        "nick": [
+            "Викинги",
+            "Олаф",
+            "Эрик",
+            "Балеог",
+            "Tlv",
+            "Vikings"
+        ]
+    },
+    "Medic": {
+        "name_id": "Medic",
+        "name_en": "Lt. Morales",
+        "name_ru": "лейтенант Моралес",
+        "name_json": "ltmorales.json",
+        "role": "Healer",
+        "tier": "B",
+        "nick": [
+            "Моралес",
+            "Медик",
+            "Morales"
+        ]
+    },
+    "Lucio": {
+        "name_id": "Lucio",
+        "name_en": "Lucio",
+        "name_ru": "Лусио",
+        "name_json": "lucio.json",
+        "role": "Healer",
+        "tier": "A",
+        "nick": [
+            ""
+        ]
+    },
+    "Dryad": {
+        "name_id": "Dryad",
+        "name_en": "Lunara",
+        "name_ru": "Лунара",
+        "name_json": "lunara.json",
+        "role": "Ranged Assassin",
+        "tier": "A",
+        "nick": [
+            ""
+        ]
+    },
+    "Maiev": {
+        "name_id": "Maiev",
+        "name_en": "Maiev",
+        "name_ru": "Майев",
+        "name_json": "maiev.json",
+        "role": "Melee Assassin",
+        "tier": "C",
+        "nick": [
+            ""
+        ]
+    },
+    "Malfurion": {
+        "name_id": "Malfurion",
+        "name_en": "Malfurion",
+        "name_ru": "Малфурион",
+        "name_json": "malfurion.json",
+        "role": "Healer",
+        "tier": "A",
+        "nick": [
+            ""
+        ]
+    },
+    "MalGanis": {
+        "name_id": "MalGanis",
+        "name_en": "Mal'Ganis",
+        "name_ru": "Малганис",
+        "name_json": "malganis.json",
+        "role": "Tank",
+        "tier": "C",
+        "nick": [
+            ""
+        ]
+    },
+    "Malthael": {
+        "name_id": "Malthael",
+        "name_en": "Malthael",
+        "name_ru": "Малтаэль",
+        "name_json": "malthael.json",
+        "role": "Bruiser",
+        "tier": "B",
+        "nick": [
+            ""
+        ]
+    },
+    "Medivh": {
+        "name_id": "Medivh",
+        "name_en": "Medivh",
+        "name_ru": "Медив",
+        "name_json": "medivh.json",
+        "role": "Support",
+        "tier": "C",
+        "nick": [
+            ""
+        ]
+    },
+    "MeiOW": {
+        "name_id": "MeiOW",
+        "name_en": "Mei",
+        "name_ru": "Мэй",
+        "name_json": "mei.json",
+        "role": "Tank",
+        "tier": "B",
+        "nick": [
+            ""
+        ]
+    },
+    "Mephisto": {
+        "name_id": "Mephisto",
+        "name_en": "Mephisto",
+        "name_ru": "Мефисто",
+        "name_json": "mephisto.json",
+        "role": "Ranged Assassin",
+        "tier": "B",
+        "nick": [
+            ""
+        ]
+    },
+    "Muradin": {
+        "name_id": "Muradin",
+        "name_en": "Muradin",
+        "name_ru": "Мурадин",
+        "name_json": "muradin.json",
+        "role": "Tank",
+        "tier": "A",
+        "nick": [
+            ""
+        ]
+    },
+    "Murky": {
+        "name_id": "Murky",
+        "name_en": "Murky",
+        "name_ru": "Мурчаль",
+        "name_json": "murky.json",
+        "role": "Melee Assassin",
+        "tier": "C",
+        "nick": [
+            ""
+        ]
+    },
+    "WitchDoctor": {
+        "name_id": "WitchDoctor",
+        "name_en": "Nazeebo",
+        "name_ru": "Назибо",
+        "name_json": "nazeebo.json",
+        "role": "Ranged Assassin",
+        "tier": "B",
+        "nick": [
+            "Nazibo"
+        ]
+    },
+    "Nova": {
+        "name_id": "Nova",
+        "name_en": "Nova",
+        "name_ru": "Нова",
+        "name_json": "nova.json",
+        "role": "Ranged Assassin",
+        "tier": "C",
+        "nick": [
+            ""
+        ]
+    },
+    "Orphea": {
+        "name_id": "Orphea",
+        "name_en": "Orphea",
+        "name_ru": "Орфея",
+        "name_json": "orphea.json",
+        "role": "Ranged Assassin",
+        "tier": "A",
+        "nick": [
+            ""
+        ]
+    },
+    "Probius": {
+        "name_id": "Probius",
+        "name_en": "Probius",
+        "name_ru": "Пробиус",
+        "name_json": "probius.json",
+        "role": "Ranged Assassin",
+        "tier": "C",
+        "nick": [
+            "Пробка"
+        ]
+    },
+    "NexusHunter": {
+        "name_id": "NexusHunter",
+        "name_en": "Qhira",
+        "name_ru": "Кахира",
+        "name_json": "qhira.json",
+        "role": "Melee Assassin",
+        "tier": "C",
+        "nick": [
+            ""
+        ]
+    },
+    "Ragnaros": {
+        "name_id": "Ragnaros",
+        "name_en": "Ragnaros",
+        "name_ru": "Рагнарос",
+        "name_json": "ragnaros.json",
+        "role": "Bruiser",
+        "tier": "A",
+        "nick": [
+            ""
+        ]
+    },
+    "Raynor": {
+        "name_id": "Raynor",
+        "name_en": "Raynor",
+        "name_ru": "Рейнор",
+        "name_json": "raynor.json",
+        "role": "Ranged Assassin",
+        "tier": "A",
+        "nick": [
+            ""
+        ]
+    },
+    "Rehgar": {
+        "name_id": "Rehgar",
+        "name_en": "Rehgar",
+        "name_ru": "Регар",
+        "name_json": "rehgar.json",
+        "role": "Healer",
+        "tier": "S",
+        "nick": [
+            ""
+        ]
+    },
+    "Rexxar": {
+        "name_id": "Rexxar",
+        "name_en": "Rexxar",
+        "name_ru": "Рексар",
+        "name_json": "rexxar.json",
+        "role": "Bruiser",
+        "tier": "A",
+        "nick": [
+            ""
+        ]
+    },
+    "Samuro": {
+        "name_id": "Samuro",
+        "name_en": "Samuro",
+        "name_ru": "Самуро",
+        "name_json": "samuro.json",
+        "role": "Melee Assassin",
+        "tier": "B",
+        "nick": [
+            ""
+        ]
+    },
+    "SgtHammer": {
+        "name_id": "SgtHammer",
+        "name_en": "Sgt. Hammer",
+        "name_ru": "сержант Кувалда",
+        "name_json": "sgthammer.json",
+        "role": "Ranged Assassin",
+        "tier": "B",
+        "nick": [
+            "Хаммер",
+            "Танк",
+            "Сержант",
+            "Кувалда"
+        ]
+    },
+    "Barbarian": {
+        "name_id": "Barbarian",
+        "name_en": "Sonya",
+        "name_ru": "Соня",
+        "name_json": "sonya.json",
+        "role": "Bruiser",
+        "tier": "A",
+        "nick": [
+            ""
+        ]
+    },
+    "Stitches": {
+        "name_id": "Stitches",
+        "name_en": "Stitches",
+        "name_ru": "Стежок",
+        "name_json": "stitches.json",
+        "role": "Tank",
+        "tier": "B",
+        "nick": [
+            "Стич",
+            "Пудж"
+        ]
+    },
+    "Stukov": {
+        "name_id": "Stukov",
+        "name_en": "Stukov",
+        "name_ru": "Стуков",
+        "name_json": "stukov.json",
+        "role": "Healer",
+        "tier": "A",
+        "nick": [
+            ""
+        ]
+    },
+    "Sylvanas": {
+        "name_id": "Sylvanas",
+        "name_en": "Sylvanas",
+        "name_ru": "Сильвана",
+        "name_json": "sylvanas.json",
+        "role": "Ranged Assassin",
+        "tier": "B",
+        "nick": [
+            ""
+        ]
+    },
+    "Tassadar": {
+        "name_id": "Tassadar",
+        "name_en": "Tassadar",
+        "name_ru": "Тассадар",
+        "name_json": "tassadar.json",
+        "role": "Ranged Assassin",
+        "tier": "A",
+        "nick": [
+            ""
+        ]
+    },
+    "Butcher": {
+        "name_id": "Butcher",
+        "name_en": "The Butcher",
+        "name_ru": "Мясник",
+        "name_json": "thebutcher.json",
+        "role": "Melee Assassin",
+        "tier": "C",
+        "nick": [
+            "Мясо"
+        ]
+    },
+    "Thrall": {
+        "name_id": "Thrall",
+        "name_en": "Thrall",
+        "name_ru": "Тралл",
+        "name_json": "thrall.json",
+        "role": "Bruiser",
+        "tier": "B",
+        "nick": [
+            ""
+        ]
+    },
+    "Tracer": {
+        "name_id": "Tracer",
+        "name_en": "Tracer",
+        "name_ru": "Трейсер",
+        "name_json": "tracer.json",
+        "role": "Ranged Assassin",
+        "tier": "B",
+        "nick": [
+            ""
+        ]
+    },
+    "Tychus": {
+        "name_id": "Tychus",
+        "name_en": "Tychus",
+        "name_ru": "Тайкус",
+        "name_json": "tychus.json",
+        "role": "Ranged Assassin",
+        "tier": "B",
+        "nick": [
+            ""
+        ]
+    },
+    "Tyrael": {
+        "name_id": "Tyrael",
+        "name_en": "Tyrael",
+        "name_ru": "Тираэль",
+        "name_json": "tyrael.json",
+        "role": "Tank",
+        "tier": "C",
+        "nick": [
+            ""
+        ]
+    },
+    "Tyrande": {
+        "name_id": "Tyrande",
+        "name_en": "Tyrande",
+        "name_ru": "Тиранда",
+        "name_json": "tyrande.json",
+        "role": "Healer",
+        "tier": "B",
+        "nick": [
+            ""
+        ]
+    },
+    "Uther": {
+        "name_id": "Uther",
+        "name_en": "Uther",
+        "name_ru": "Утер",
+        "name_json": "uther.json",
+        "role": "Healer",
+        "tier": "B",
+        "nick": [
+            ""
+        ]
+    },
+    "Valeera": {
+        "name_id": "Valeera",
+        "name_en": "Valeera",
+        "name_ru": "Валира",
+        "name_json": "valeera.json",
+        "role": "Melee Assassin",
+        "tier": "B",
+        "nick": [
+            ""
+        ]
+    },
+    "DemonHunter": {
+        "name_id": "DemonHunter",
+        "name_en": "Valla",
+        "name_ru": "Валла",
+        "name_json": "valla.json",
+        "role": "Ranged Assassin",
+        "tier": "A",
+        "nick": [
+            ""
+        ]
+    },
+    "Varian": {
+        "name_id": "Varian",
+        "name_en": "Varian",
+        "name_ru": "Вариан",
+        "name_json": "varian.json",
+        "role": "Bruiser",
+        "tier": "C",
+        "nick": [
+            ""
+        ]
+    },
+    "Whitemane": {
+        "name_id": "Whitemane",
+        "name_en": "Whitemane",
+        "name_ru": "Вайтмейн",
+        "name_json": "whitemane.json",
+        "role": "Healer",
+        "tier": "B",
+        "nick": [
+            ""
+        ]
+    },
+    "Necromancer": {
+        "name_id": "Necromancer",
+        "name_en": "Xul",
+        "name_ru": "Зул",
+        "name_json": "xul.json",
+        "role": "Bruiser",
+        "tier": "A",
+        "nick": [
+            ""
+        ]
+    },
+    "Yrel": {
+        "name_id": "Yrel",
+        "name_en": "Yrel",
+        "name_ru": "Ирель",
+        "name_json": "yrel.json",
+        "role": "Bruiser",
+        "tier": "B",
+        "nick": [
+            ""
+        ]
+    },
+    "Zagara": {
+        "name_id": "Zagara",
+        "name_en": "Zagara",
+        "name_ru": "Загара",
+        "name_json": "zagara.json",
+        "role": "Ranged Assassin",
+        "tier": "B",
+        "nick": [
+            ""
+        ]
+    },
+    "Zarya": {
+        "name_id": "Zarya",
+        "name_en": "Zarya",
+        "name_ru": "Заря",
+        "name_json": "zarya.json",
+        "role": "Support",
+        "tier": "C",
+        "nick": [
+            ""
+        ]
+    },
+    "Zeratul": {
+        "name_id": "Zeratul",
+        "name_en": "Zeratul",
+        "name_ru": "Зератул",
+        "name_json": "zeratul.json",
+        "role": "Melee Assassin",
+        "tier": "B",
+        "nick": [
+            ""
+        ]
+    },
+    "Zuljin": {
+        "name_id": "Zuljin",
+        "name_en": "Zul'jin",
+        "name_ru": "Зулджин",
+        "name_json": "zuljin.json",
+        "role": "Ranged Assassin",
+        "tier": "A",
+        "nick": [
+            ""
+        ]
+    }
+}
