@@ -354,6 +354,17 @@ async def get_profile_user_command(ctx: SamuroUserContext, target: hikari.Member
 
 
 @hots_profile.child
+@lightbulb.option("battletag", "Батлтег игрока", type=str, required=True)
+@lightbulb.option("member", "Пользователь", type=hikari.Member, required=True)
+@lightbulb.command("add", "Добавить профиль в базу", pass_options=True)
+@lightbulb.implements(lightbulb.SlashSubCommand)
+async def get_profile(ctx:SamuroSlashContext, member: hikari.Member, battletag: str) -> None:
+    await ctx.respond(hikari.ResponseType.DEFERRED_MESSAGE_CREATE)
+    user = await HotsPlayer.add(member=member, battletag=battletag)
+    await ctx.respond(embed=await user.profile())
+
+
+@hots_profile.child
 @lightbulb.option(
     name="member",
     description="Профиль игрока",

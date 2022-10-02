@@ -4,6 +4,8 @@ import logging
 from datetime import datetime
 import typing as t
 import itertools as it
+from bs4 import BeautifulSoup
+import requests
 
 import hikari
 from difflib import get_close_matches
@@ -317,6 +319,20 @@ class PlayerStats(DatabaseModel):
         )
 
     @classmethod
+    async def clear(cls, user: hikari.SnowflakeishOr[hikari.PartialUser], guild: hikari.SnowflakeishOr[hikari.PartialGuild]) -> None:
+        return cls(
+            hikari.Snowflake(user),
+            hikari.Snowflake(guild),
+            battle_tag=None,
+            points=0,
+            win=0,
+            lose=0,
+            winstreak=0,
+            max_ws=0,
+            season=season
+        )
+
+    @classmethod
     async def fetch(
             cls, user: hikari.SnowflakeishOr[hikari.PartialUser], guild: hikari.SnowflakeishOr[hikari.PartialGuild]
     ) -> None:
@@ -519,6 +535,75 @@ class HotsPlayer(DatabaseModel):
 
         await self.add_log(event_id=event_id, winner=winner, mmr=mmr, points=points, map=map)
 
+    async def read_mmr(self, battletag: str) -> int:
+        mmr_url = None
+        user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) ' \
+                     'Chrome/42.0.2311.135 Safari/537.36 Edge/12.246 '
+        bname = battletag.replace('#', '%23')
+        url = 'https://www.heroesprofile.com/Search/?searched_battletag=' + bname
+        resp = requests.get(url, headers={"User-Agent": f"{user_agent}"})
+        if 'Profile' in resp.url:
+            mmr_url = resp.url.replace('Profile', 'MMR')
+        else:
+            soup = BeautifulSoup(resp.text, 'html.parser')
+            multi_account = soup.find('div', attrs={'id': 'choose_battletag'})
+            region = 'ion=2'
+            if multi_account:
+                links = multi_account.find_all('a')
+                for link in links:
+                    if region in link['href']:
+                        mmr_url = 'https://www.heroesprofile.com' + link['href'].replace('®', '&reg').replace('Profile',
+                                                                                                              'MMR')
+
+        if mmr_url:
+            resp = requests.get(mmr_url, headers={"User-Agent": f"{user_agent}"})
+            soup = BeautifulSoup(resp.text, 'html.parser')
+            mmr_table = soup.find('div', attrs={'class': 'gray-band-background table-section'})
+            mmr_h3 = mmr_table.find('h3')
+            text, mmr = mmr_h3.text.split(': ')
+            return int(mmr)
+        raise errors.DontHaveStormPlays
+
+    @classmethod
+    async def add(cls, member: hikari.Member, battletag: str):
+        record = await cls._db.fetchrow(
+            """SELECT * FROM players WHERE id = $1""",
+            member.id,
+        )
+        if record:
+            logger.warning(f"Профиль уже создан")
+            raise errors.HasProfile
+
+        profile = cls(
+            member=member,
+            id=member.id,
+            guild_id=member.guild_id,
+            mention=f"<@{member.id}>",
+            battle_tag=battletag,
+        )
+
+        profile.mmr = await profile.read_mmr(battletag=battletag)
+        profile.league, profile.division = profile.get_league_division()
+
+        await cls._db.execute(
+            """
+            INSERT INTO players (btag, id, guild_id, mmr, league, division)
+            VALUES ($1, $2, $3, $4, $5, $6)
+            ON CONFLICT (id) DO NOTHING
+            """,
+            battletag,
+            profile.id,
+            profile.guild_id,
+            profile.mmr,
+            profile.league,
+            profile.division
+        )
+
+        # дозаполнить данные
+        profile.league = leagues.get(profile.league)
+        profile.stats = await PlayerStats.clear(profile.id, profile.guild_id)
+
+        return profile
 
     @classmethod
     async def fetch(cls, user: hikari.Member, guild_id: hikari.SnowflakeishOr[hikari.PartialGuild]):
@@ -537,9 +622,11 @@ class HotsPlayer(DatabaseModel):
             An object representing stored user data.
         """
         record = await cls._db.fetchrow(
-            """SELECT * FROM players WHERE id = $1 and guild_id = $2""",
-            user.id, guild_id
+            """SELECT * FROM players WHERE id = $1""",
+            user.id,
         )
+
+        # TODO: Получение профиля с heroesprofile
 
         if not record:
             logger.warning(f"Попытка посмотреть несуществующий профиль")
@@ -614,7 +701,7 @@ class HotsEvent(DatabaseModel):
     blue: list[HotsPlayer]
     red: list[HotsPlayer]
     season: str
-    map: str = "unknown"
+    map: str = "???"
 
     async def update(self):
         await self._db.execute(

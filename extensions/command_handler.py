@@ -193,6 +193,29 @@ async def application_error_handler(ctx: SamuroContext, error: BaseException) ->
             )
             return
 
+        if isinstance(error.original, errors.HasProfile):
+            await ctx.respond(
+                embed=hikari.Embed(
+                    title="❌ В базе уже есть этот профиль",
+                    description=f"Используйте команду `/profile show`",
+                    color=const.ERROR_COLOR,
+                ),
+                flags=hikari.MessageFlag.EPHEMERAL,
+            )
+            return
+
+        if isinstance(error.original, errors.DontHaveStormPlays):
+            await ctx.respond(
+                embed=hikari.Embed(
+                    title="❌ Нет игр в штормовой лиге",
+                    description=f"На сайте `heroesprofile.com` не найдены игры в лиге.\n"
+                                f"Пожалуйста загрузите реплеи на сайт и повторите попытку",
+                    color=const.ERROR_COLOR,
+                ),
+                flags=hikari.MessageFlag.EPHEMERAL,
+            )
+            return
+
         if isinstance(error.original, errors.BadPlayersCount):
             await ctx.respond(
                 embed=hikari.Embed(
