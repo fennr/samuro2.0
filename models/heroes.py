@@ -58,6 +58,7 @@ class EventTypes(str, enum.Enum):
     event5x5 = "5x5"
     event1x4 = "1x4"
     unranked = "unranked"
+    manual5x5 = "5x5 manual"
 
 
 class DatabaseUserFlag(enum.Flag):
@@ -70,7 +71,7 @@ class DatabaseUserFlag(enum.Flag):
 
 
 def check_type(type, members):
-    if type == '5x5':
+    if type in [EventTypes.event5x5, EventTypes.unranked, EventTypes.manual5x5]:
         if len(members) != 10:
             raise errors.BadPlayersCount
     elif type == '1x4':
@@ -767,6 +768,9 @@ class HotsEvent(DatabaseModel):
         blue = red = []
         if type == EventTypes.event5x5:
             blue, red = await matchmaking_5x5(ctx, type, players_str=players)
+        elif type in [EventTypes.unranked, EventTypes.manual5x5]:
+            blue, red = await matchmaking_5x5(ctx, type, players_str=players, manual=True)
+        if len(blue) > 0 and len(red) > 0:
             event_id = await cls._db.fetchval(
                 """
                 INSERT INTO event_history (time, guild_id, winner, active, 
@@ -786,10 +790,6 @@ class HotsEvent(DatabaseModel):
                 ctx.channel_id, delta_mmr, lose_p, ctx.author.username, type, win_p, season, map
 
             )
-        elif type == EventTypes.unranked:
-
-        else:
-            await ctx.respond("Другие типы пока не поддерживаются")
 
         return cls(
             id=event_id,
@@ -921,7 +921,7 @@ class HotsEvent(DatabaseModel):
 
         winner_team = self.blue if self.winner == EventWinner.BLUE else self.red
         loser_team = self.blue if self.winner == EventWinner.RED else self.red
-        if self.type == EventTypes.event5x5:
+        if self.type in [EventTypes.event5x5, EventTypes.manual5x5]:
             for player in winner_team:
                 await player.ending_5x5(event_id=self.id, mmr=self.delta_mmr, points=self.win_points, winner=True,
                                         map=self.map)
