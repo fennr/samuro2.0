@@ -292,4 +292,37 @@ create table IF NOT EXISTS votes
 comment on table "votes" is 'Таблица с открытыми голосованиями';
 
 
+create sequence if not exists "achievements_achiev_id_seq"
+    as integer;
+
+CREATE TABLE IF NOT EXISTS achievements
+(
+    id       integer default nextval('"achievements_achiev_id_seq"'::regclass) not null,
+    guild_id guild_id                                                          not null,
+    name     varchar,
+    primary key (id, guild_id)
+);
+
+comment on table achievements is 'Таблица существующих достижений';
+
+CREATE TABLE IF NOT EXISTS user_achievements
+(
+    id          discord_id,
+    guild_id    guild_id,
+    season      varchar default 'Season 01'::character varying not null,
+    achievement integer,
+    timestamp   timestamp,
+    constraint stats_key
+        foreign key (id, guild_id, season) references players_stats (id, guild_id, season)
+            on update cascade on delete cascade,
+    constraint achive_key
+        foreign key (achievement, guild_id) references achievements (id, guild_id)
+            on update cascade on delete cascade
+);
+
+comment on table user_achievements is 'Связи между игроком и достижениями';
+
+
+
+
 

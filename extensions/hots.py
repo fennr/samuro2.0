@@ -469,7 +469,7 @@ async def event_add_log(ctx: SamuroSlashContext, event_id: int) -> None:
 @lightbulb.add_checks(is_lead)
 @lightbulb.option(name="lose_p", description="Баллы за поражение", type=int, min_value=1, max_value=4, default=1)
 @lightbulb.option(name="win_p", description="Баллы за победу", type=int, min_value=4, max_value=8, default=4)
-@lightbulb.option(name="mmr", description="Изменение ммр за матч", type=int, default=4)
+@lightbulb.option(name="mmr", description="Изменение ммр за матч", type=int, default=4, min_value=0, max_value=8)
 @lightbulb.option(name="players", description="Игроки", type=t.List[hikari.Member], required=True)
 @lightbulb.option(name="map", description="Карта", choices=util.maps, required=True)
 @lightbulb.option(name="type", description="Тип ивента", choices=util.event_types, default=util.event_types[0])
@@ -528,7 +528,7 @@ async def event_test(ctx: SamuroSlashContext, winner: str) -> None:
 
 
 
-@hots.command
+'''@hots.command
 @lightbulb.command(name="emojis", description="Показать все эмодзи")
 @lightbulb.implements(lightbulb.SlashCommand)
 async def get_emojis(ctx: SamuroSlashContext) -> None:
@@ -537,7 +537,7 @@ async def get_emojis(ctx: SamuroSlashContext) -> None:
     for emoji in emojis:
         print(emoji)
 
-    await ctx.respond("Команда отработала", flags=hikari.MessageFlag.EPHEMERAL)
+    await ctx.respond("Команда отработала", flags=hikari.MessageFlag.EPHEMERAL)'''
 
 
 

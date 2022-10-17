@@ -96,7 +96,6 @@ def get_badges(user: hikari.User) -> List[str]:
 
 
 async def get_userinfo(ctx: SamuroContext, user: hikari.User) -> hikari.Embed:
-
     if not ctx.guild_id:
         raise RuntimeError("Cannot use get_userinfo outside of a guild.")
 
@@ -210,7 +209,7 @@ def is_above(me: hikari.Member, member: hikari.Member) -> bool:
 
 
 def can_harm(
-    me: hikari.Member, member: hikari.Member, permission: hikari.Permissions, *, raise_error: bool = False
+        me: hikari.Member, member: hikari.Member, permission: hikari.Permissions, *, raise_error: bool = False
 ) -> bool:
     """
     Returns True if "member" can be harmed by "me", also checks if "me" has "permission".
@@ -364,7 +363,7 @@ async def maybe_edit(message: hikari.PartialMessage, *args, **kwargs) -> None:
 
 
 def format_reason(
-    reason: t.Optional[str] = None, moderator: Optional[hikari.Member] = None, *, max_length: Optional[int] = 512
+        reason: t.Optional[str] = None, moderator: Optional[hikari.Member] = None, *, max_length: Optional[int] = 512
 ) -> str:
     """Format a reason for a moderation action.
 

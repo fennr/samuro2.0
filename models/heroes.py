@@ -80,6 +80,10 @@ def check_type(type, members):
             raise errors.BadPlayersCount
 
 
+def sort_by_mmr(player):
+    return player.mmr
+
+
 async def matchmaking_5x5(ctx: SamuroSlashContext, type: str, players_str: str):
     players_id = util.players_parse(players_str)
     players = []
@@ -95,14 +99,13 @@ async def matchmaking_5x5(ctx: SamuroSlashContext, type: str, players_str: str):
         while player.mmr in unique_mmr:
             player.mmr += 1
         unique_mmr.append(player.mmr)
+    players.sort(key=sort_by_mmr, reverse=True)
     team_one_mmr, team_two_mmr = util.min_diff_sets(
         [player.mmr for index, player in enumerate(players[:-2])])
     team_one_mmr += (players[-1].mmr,)
     team_two_mmr += (players[-2].mmr,)
     team_one = [player for player in players if player.mmr in team_one_mmr]
     team_two = [player for player in players if player.mmr in team_two_mmr]
-    print(team_one)
-    print(team_two)
     return team_one, team_two
 
 
@@ -194,11 +197,9 @@ class HotsHero:
             return False
 
     def get_name_id(self):
-        print("Возврат героя")
         return self.id
 
     def get_role(self):
-        print("Возврат роли")
         return self.role
 
     def get_description_embed(self) -> hikari.Embed:
@@ -300,6 +301,7 @@ class PlayerStats(DatabaseModel):
     winstreak: int = 0
     max_ws: int = 0
     season: str = const.hots_season
+    achievements: list = None
 
     async def update(self):
         await self._db.execute(
@@ -329,7 +331,7 @@ class PlayerStats(DatabaseModel):
             lose=0,
             winstreak=0,
             max_ws=0,
-            season=season
+            season=const.hots_season
         )
 
     @classmethod
@@ -360,9 +362,20 @@ class PlayerStats(DatabaseModel):
                 lose=0,
                 winstreak=0,
                 max_ws=0,
-                season=season
+                season=season,
+                achievements=None
             )
-
+        achievements = await cls._db.fetch(
+            """
+            SELECT ua.id, a.name, ua.timestamp FROM user_achievements as ua
+                    INNER JOIN achievements as a
+                    ON ua.achievement = a.id
+                    WHERE ua.id = $1 AND ua.guild_id = $2 AND season = $3
+            """,
+            hikari.Snowflake(user),
+            hikari.Snowflake(guild),
+            season
+        )
         return cls(
             id=hikari.Snowflake(record.get("id")),
             guild_id=hikari.Snowflake(record.get("guild_id")),
@@ -372,7 +385,8 @@ class PlayerStats(DatabaseModel):
             lose=record.get("lose"),
             winstreak=record.get("winstreak"),
             max_ws=record.get("max_ws"),
-            season=record.get("season")
+            season=record.get("season"),
+            achievements=achievements
         )
 
 
@@ -400,7 +414,7 @@ class HotsPlayer(DatabaseModel):
 
         for record in records:
             mmr = '+'+str(record.get("delta_mmr")) if record.get("winner") else '-'+str(record.get("delta_mmr"))
-            mmr = "unk" if mmr[1:] == '0' else mmr
+            mmr = "?" if mmr[1:] == '0' else mmr
             result = const.EMOJI_GREEN_UP if record.get("winner") else const.EMOJI_RED_DOWN
             paginator.add_line(f"{result} ID: {record.get('event_id')} {record.get('map')} ({mmr})")
 
@@ -425,6 +439,9 @@ class HotsPlayer(DatabaseModel):
         if self.stats.battle_tag:
             await self.add_stats_info(embed=embed)
 
+        if self.stats.achievements:
+            await self.add_achievements_info(embed=embed)
+
         return embed
 
     async def add_stats_info(self, embed: hikari.Embed) -> hikari.Embed:
@@ -445,9 +462,7 @@ class HotsPlayer(DatabaseModel):
         )
         correct = 0
         wrong = 0
-        print(records)
         for record in records:
-            print(record)
             if record.get("won"):
                 correct += 1
             else:
@@ -460,6 +475,14 @@ class HotsPlayer(DatabaseModel):
 • Ошибочных: `{wrong or "-"}`  """
             )
 
+        return embed
+
+    async def add_achievements_info(self, embed: hikari.Embed) -> hikari.Embed:
+        text = "\n".join(f"• {a.get('name')}: <t:{int(a.get('timestamp').timestamp())}:D>" for a in self.stats.achievements)
+        embed.add_field(
+            name="Достижения",
+            value=text
+        )
         return embed
 
     async def update(self) -> None:
@@ -560,8 +583,11 @@ class HotsPlayer(DatabaseModel):
             soup = BeautifulSoup(resp.text, 'html.parser')
             mmr_table = soup.find('div', attrs={'class': 'gray-band-background table-section'})
             mmr_h3 = mmr_table.find('h3')
-            text, mmr = mmr_h3.text.split(': ')
-            return int(mmr)
+            try:
+                text, mmr = mmr_h3.text.split(': ')
+                return int(mmr)
+            except ValueError:
+                raise errors.DontHaveStormPlays
         raise errors.DontHaveStormPlays
 
     @classmethod
@@ -701,7 +727,7 @@ class HotsEvent(DatabaseModel):
     blue: list[HotsPlayer]
     red: list[HotsPlayer]
     season: str
-    map: str = "???"
+    map: str = "??"
 
     async def update(self):
         await self._db.execute(
@@ -772,7 +798,6 @@ class HotsEvent(DatabaseModel):
             season=season,
             map=map,
         )
-
 
     async def remove(self, ctx: SamuroSlashContext) -> hikari.Embed:
         record = await _has_active_event(ctx)
@@ -902,11 +927,13 @@ class HotsEvent(DatabaseModel):
         return await self.ending_description(winner=winner)
 
     def description(self):
+        map_img = util.maps_url + self.map.replace(" ", "-").lower() + "/main.jpg"
         embed = hikari.Embed(
             title=f"Матч #{self.id} в режиме {self.type}",
             description=f"Карта: {self.map}",
             color=const.EMBED_GREEN
         )
+        embed.set_thumbnail(map_img)
         embed.add_field(
             name="Blue",
             value='\n'.join([x.mention for x in self.blue]),
