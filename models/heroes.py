@@ -57,6 +57,7 @@ class HeroLeagues(str, enum.Enum):
 class EventTypes(str, enum.Enum):
     event5x5 = "5x5"
     event1x4 = "1x4"
+    unranked = "unranked"
 
 
 class DatabaseUserFlag(enum.Flag):
@@ -84,7 +85,7 @@ def sort_by_mmr(player):
     return player.mmr
 
 
-async def matchmaking_5x5(ctx: SamuroSlashContext, type: str, players_str: str):
+async def matchmaking_5x5(ctx: SamuroSlashContext, type: str, players_str: str, manual:bool = False):
     players_id = util.players_parse(players_str)
     players = []
     unique_mmr = []
@@ -99,13 +100,17 @@ async def matchmaking_5x5(ctx: SamuroSlashContext, type: str, players_str: str):
         while player.mmr in unique_mmr:
             player.mmr += 1
         unique_mmr.append(player.mmr)
-    players.sort(key=sort_by_mmr, reverse=True)
-    team_one_mmr, team_two_mmr = util.min_diff_sets(
-        [player.mmr for index, player in enumerate(players[:-2])])
-    team_one_mmr += (players[-1].mmr,)
-    team_two_mmr += (players[-2].mmr,)
-    team_one = [player for player in players if player.mmr in team_one_mmr]
-    team_two = [player for player in players if player.mmr in team_two_mmr]
+    if not manual:
+        players.sort(key=sort_by_mmr, reverse=True)
+        team_one_mmr, team_two_mmr = util.min_diff_sets(
+            [player.mmr for index, player in enumerate(players[:-2])])
+        team_one_mmr += (players[-1].mmr,)
+        team_two_mmr += (players[-2].mmr,)
+        team_one = [player for player in players if player.mmr in team_one_mmr]
+        team_two = [player for player in players if player.mmr in team_two_mmr]
+    else:
+        team_one = [player for player in players[:5]]
+        team_two = [player for player in players[5:]]
     return team_one, team_two
 
 
@@ -546,7 +551,7 @@ class HotsPlayer(DatabaseModel):
             self.stats.season
         )
 
-    async def match_ending(self, event_id: int, mmr: int, points: int, winner: bool, map: str) -> None:
+    async def ending_5x5(self, event_id: int, mmr: int, points: int, winner: bool, map: str) -> None:
         await self.update_stats(winner=winner, points=points)
         mmr = self.fix_mmr(mmr=mmr)
         if winner:
@@ -556,6 +561,10 @@ class HotsPlayer(DatabaseModel):
         self.league, self.division = self.get_league_division()
         await self.update()
 
+        await self.add_log(event_id=event_id, winner=winner, mmr=mmr, points=points, map=map)
+
+    async def ending_unranked(self, event_id: int, mmr: int, points: int, winner: bool, map: str) -> None:
+        await self.update_stats(winner=winner, points=points)
         await self.add_log(event_id=event_id, winner=winner, mmr=mmr, points=points, map=map)
 
     async def read_mmr(self, battletag: str) -> int:
@@ -777,6 +786,8 @@ class HotsEvent(DatabaseModel):
                 ctx.channel_id, delta_mmr, lose_p, ctx.author.username, type, win_p, season, map
 
             )
+        elif type == EventTypes.unranked:
+
         else:
             await ctx.respond("Другие типы пока не поддерживаются")
 
@@ -905,19 +916,27 @@ class HotsEvent(DatabaseModel):
                 flag
             )
 
-
     async def ending(self, ctx: SamuroSlashContext, winner: EventWinner) -> hikari.Embed:
-
         self.winner = winner
 
         winner_team = self.blue if self.winner == EventWinner.BLUE else self.red
         loser_team = self.blue if self.winner == EventWinner.RED else self.red
-        for player in winner_team:
-            await player.match_ending(event_id=self.id, mmr=self.delta_mmr, points=self.win_points, winner=True,
-                                      map=self.map)
-        for player in loser_team:
-            await player.match_ending(event_id=self.id, mmr=self.delta_mmr, points=self.win_points, winner=False,
-                                      map=self.map)
+        if self.type == EventTypes.event5x5:
+            for player in winner_team:
+                await player.ending_5x5(event_id=self.id, mmr=self.delta_mmr, points=self.win_points, winner=True,
+                                        map=self.map)
+            for player in loser_team:
+                await player.ending_5x5(event_id=self.id, mmr=self.delta_mmr, points=self.win_points, winner=False,
+                                        map=self.map)
+        elif self.type == EventTypes.unranked:
+            for player in winner_team:
+                await player.ending_unranked(event_id=self.id, mmr=self.delta_mmr, points=self.win_points, winner=True,
+                                             map=self.map)
+            for player in loser_team:
+                await player.ending_unranked(event_id=self.id, mmr=self.delta_mmr, points=self.win_points, winner=False,
+                                             map=self.map)
+        else:
+            pass  # другие типы ивентов
 
         self.active = False
         await self.update()
@@ -925,6 +944,7 @@ class HotsEvent(DatabaseModel):
         await self.vote_log(winner=winner)
 
         return await self.ending_description(winner=winner)
+
 
     def description(self):
         map_img = util.maps_url + self.map.replace(" ", "-").lower() + "/main.jpg"

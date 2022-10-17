@@ -4,7 +4,6 @@ import re
 import typing as t
 from difflib import get_close_matches
 from datetime import datetime
-from tabulate import tabulate
 
 import hikari
 import lightbulb

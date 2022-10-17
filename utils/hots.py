@@ -29,7 +29,7 @@ flatten_mmr = {
 }
 
 
-event_types = ["5x5", "1x4", "Лощина мясника"]
+event_types = ["5x5", "unranked"]
 
 
 maps = ["Alterac Pass", "Battlefield Of Eternity", "Blackheart's Bay", "Braxis Holdout", "Cursed Hollow",

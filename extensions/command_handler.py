@@ -204,6 +204,17 @@ async def application_error_handler(ctx: SamuroContext, error: BaseException) ->
             )
             return
 
+        if isinstance(error.original, errors.EventNotFound):
+            await ctx.respond(
+                embed=hikari.Embed(
+                    title="❌ Не найдено события",
+                    description=f"На данном сервере нет события с таким id\n Посмотреть ивенты можно командой `/event list`",
+                    color=const.ERROR_COLOR,
+                ),
+                flags=hikari.MessageFlag.EPHEMERAL,
+            )
+            return
+
         if isinstance(error.original, errors.DontHaveStormPlays):
             await ctx.respond(
                 embed=hikari.Embed(
