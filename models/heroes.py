@@ -945,7 +945,6 @@ class HotsEvent(DatabaseModel):
 
         return await self.ending_description(winner=winner)
 
-
     def description(self):
         map_img = util.maps_url + self.map.replace(" ", "-").lower() + "/main.jpg"
         embed = hikari.Embed(
@@ -956,12 +955,12 @@ class HotsEvent(DatabaseModel):
         embed.set_thumbnail(map_img)
         embed.add_field(
             name="Blue",
-            value='\n'.join([x.mention for x in self.blue]),
+            value='\n'.join([f"{x.mention} - {x.mmr}" for x in self.blue]),
             inline=True
         )
         embed.add_field(
             name="Red",
-            value='\n'.join([x.mention for x in self.red]),
+            value='\n'.join([f"{x.mention} - {x.mmr}" for x in self.red]),
             inline=True
         )
         return embed
