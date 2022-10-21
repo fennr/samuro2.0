@@ -306,9 +306,7 @@ async def hero_name_ac(
 
 
 @hots.command
-@lightbulb.add_checks(
-    has_permissions(hikari.Permissions.ADMINISTRATOR)
-)
+@lightbulb.add_checks(is_lead)
 @lightbulb.option("name", "Имя текущего сезона")
 @lightbulb.command("season", "Установить название текущего сезона", pass_options=True)
 @lightbulb.implements(lightbulb.SlashCommand)
@@ -338,6 +336,7 @@ async def hots_profile(ctx: SamuroSlashContext) -> None:
 
 
 @hots_profile.child
+@lightbulb.add_checks(is_lead)
 @lightbulb.option(
     name="member",
     description="Профиль игрока",

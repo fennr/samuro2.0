@@ -23,9 +23,23 @@ def _guild_only(ctx: SamuroContext) -> bool:
 async def is_lead(ctx: SamuroContext) -> bool:
     """Проверка является ли данный человек ведущим"""
 
-    # TODO добавить таблицу, куда будут заноситься роли
-    return True
-
+    if config.OWNER:
+        if ctx.author.id == config.OWNER:
+            return True
+    if isinstance(ctx.author, hikari.Member):
+        member = ctx.author
+    else:
+        member = ctx.app.cache.get_member(ctx.guild_id, ctx.author)
+    records = await ctx.app.db.fetch(
+        """
+        SELECT * from lead_config WHERE guild_id = $1
+        """,
+        ctx.guild_id
+    )
+    for record in records:
+        if record.get("role_id") in member.role_ids:
+            return True
+    raise lightbulb.CheckFailure("Нет необходимой роли для использования команды")
 
 @lightbulb.Check  # type: ignore
 async def is_above_target(ctx: SamuroContext) -> bool:

@@ -169,6 +169,17 @@ async def application_error_handler(ctx: SamuroContext, error: BaseException) ->
         )
         return
 
+    if isinstance(error, lightbulb.CheckFailure):
+        await ctx.respond(
+            embed=hikari.Embed(
+                title="❌ Недостаточно прав",
+                description=f"Убедитесь что у вас есть необходимая роль для использования команды",
+                color=const.ERROR_COLOR,
+            ),
+            flags=hikari.MessageFlag.EPHEMERAL,
+        )
+        return
+
     if isinstance(error, lightbulb.CommandInvocationError):
 
         if isinstance(error.original, errors.HeroNotFound):
