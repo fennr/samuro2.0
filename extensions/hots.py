@@ -336,7 +336,6 @@ async def hots_profile(ctx: SamuroSlashContext) -> None:
 
 
 @hots_profile.child
-@lightbulb.add_checks(is_lead)
 @lightbulb.option(
     name="member",
     description="Профиль игрока",
