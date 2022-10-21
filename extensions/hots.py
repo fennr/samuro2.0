@@ -306,14 +306,28 @@ async def hero_name_ac(
 
 
 @hots.command
+@lightbulb.add_checks(
+    has_permissions(hikari.Permissions.ADMINISTRATOR)
+)
 @lightbulb.option("name", "Имя текущего сезона")
 @lightbulb.command("season", "Установить название текущего сезона", pass_options=True)
 @lightbulb.implements(lightbulb.SlashCommand)
 async def set_season(ctx: SamuroSlashContext, name: str) -> None:
-    await ctx.app.db.execute("""
-        UPDATE global_config SET season = $1 WHERE guild_id = $2""",
-        name, ctx.guild_id)
-    await ctx.respond(f"Текущий сезон обновлен\nИмя текущего сезона: {name}")
+    await ctx.app.db.execute(
+        """
+        INSERT INTO global_config (guild_id, prefix, season)
+        VALUES ($1, $2, $3)
+        ON CONFLICT (guild_id) DO UPDATE
+        SET season = $3 
+        """,
+        ctx.guild_id, None, name)
+    await ctx.respond(
+        embed=hikari.Embed(
+            title="✅ Сезон обновлен",
+            description=f"Имя нового сезона - {name}",
+            color=const.MISC_COLOR
+        )
+    )
 
 
 @hots.command
@@ -351,13 +365,12 @@ async def get_profile_user_command(ctx: SamuroUserContext, target: hikari.Member
     await ctx.respond(embed=await user.profile())
 
 
-
 @hots_profile.child
 @lightbulb.option("battletag", "Батлтег игрока", type=str, required=True)
 @lightbulb.option("member", "Пользователь", type=hikari.Member, required=True)
 @lightbulb.command("add", "Добавить профиль в базу", pass_options=True)
 @lightbulb.implements(lightbulb.SlashSubCommand)
-async def get_profile(ctx:SamuroSlashContext, member: hikari.Member, battletag: str) -> None:
+async def get_profile(ctx: SamuroSlashContext, member: hikari.Member, battletag: str) -> None:
     await ctx.respond(hikari.ResponseType.DEFERRED_MESSAGE_CREATE)
     user = await HotsPlayer.add(member=member, battletag=battletag)
     await ctx.respond(embed=await user.profile())
@@ -396,8 +409,6 @@ async def get_history_user_command(ctx: SamuroUserContext, target: hikari.Member
 
     navigator = models.AuthorOnlyNavigator(ctx, pages=embeds)
     await navigator.send(ctx.interaction)
-
-
 
 
 @hots.command
@@ -476,7 +487,6 @@ async def event_add_log(ctx: SamuroSlashContext, event_id: int) -> None:
 @lightbulb.implements(lightbulb.SlashSubCommand)
 async def event_create(ctx: SamuroSlashContext, type: str, map: str, players: str,
                        mmr: int, win_p: int, lose_p: int) -> None:
-
     event = await HotsEvent.init(datetime.now(), ctx, type=type, win_p=win_p, lose_p=lose_p, delta_mmr=mmr,
                                  map=map, players=players)
     view = EventView(ctx=ctx, event=event)
@@ -500,11 +510,11 @@ async def event_remove(ctx: SamuroSlashContext) -> None:
 
 @hots_events.child
 @lightbulb.add_checks(is_lead)
-@lightbulb.option(name="winner", description="Победитель", choices=[EventWinner.BLUE.value, EventWinner.RED.value], required=True)
+@lightbulb.option(name="winner", description="Победитель", choices=[EventWinner.BLUE.value, EventWinner.RED.value],
+                  required=True)
 @lightbulb.command(name="end", description="Завершить ивент", pass_options=True)
 @lightbulb.implements(lightbulb.SlashSubCommand)
 async def event_ending(ctx: SamuroSlashContext, winner: str) -> None:
-
     event = await HotsEvent.get_active_event(ctx)
 
     embed = await event.ending(ctx=ctx, winner=winner)
@@ -513,18 +523,17 @@ async def event_ending(ctx: SamuroSlashContext, winner: str) -> None:
 
 
 @hots_events.child
-@lightbulb.add_checks(is_lead)
-@lightbulb.option(name="winner", description="Победитель", choices=[EventWinner.BLUE.value, EventWinner.RED.value], required=True)
+@lightbulb.add_checks(lightbulb.owner_only)
+@lightbulb.option(name="winner", description="Победитель", choices=[EventWinner.BLUE.value, EventWinner.RED.value],
+                  required=True)
 @lightbulb.command(name="test", description="Тестирование голосований", pass_options=True)
 @lightbulb.implements(lightbulb.SlashSubCommand)
 async def event_test(ctx: SamuroSlashContext, winner: str) -> None:
-
     event = await HotsEvent.get_active_event(ctx)
 
     await event.vote_log(winner=winner)
 
     await ctx.respond("Голоса подсчитаны", flags=hikari.MessageFlag.EPHEMERAL)
-
 
 
 '''@hots.command
@@ -538,9 +547,6 @@ async def get_emojis(ctx: SamuroSlashContext) -> None:
 
     await ctx.respond("Команда отработала", flags=hikari.MessageFlag.EPHEMERAL)'''
 
-
-
-
 '''@hots.listener(hikari.InteractionCreateEvent)
 async def inter_event(event: hikari.InteractionCreateEvent):
     if not isinstance(event.interaction, hikari.ComponentInteraction):
@@ -553,7 +559,5 @@ def load(bot: SamuroBot) -> None:
 
 def unload(bot: SamuroBot) -> None:
     bot.remove_plugin(hots)
-
-
 
 # by fenrir#5455
