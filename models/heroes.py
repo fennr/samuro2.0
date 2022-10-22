@@ -594,8 +594,9 @@ class HotsPlayer(DatabaseModel):
             mmr_table = soup.find('div', attrs={'class': 'gray-band-background table-section'})
             mmr_h3 = mmr_table.find('h3')
             try:
-                text, mmr = mmr_h3.text.split(': ')
-                return int(mmr)
+                text, mmr_str = mmr_h3.text.split(': ')
+                mmr = int(mmr_str)
+                return mmr if mmr > 2200 else 2200
             except ValueError:
                 raise errors.DontHaveStormPlays
         raise errors.DontHaveStormPlays
