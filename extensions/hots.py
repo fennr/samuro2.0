@@ -364,6 +364,29 @@ async def get_profile_user_command(ctx: SamuroUserContext, target: hikari.Member
 
 
 @hots_profile.child
+@lightbulb.add_checks(is_lead)
+@lightbulb.option("block", "Заблокировать", type=bool, required=False)
+@lightbulb.option("mmr", "Изменить ММР", type=int, min_value=2200, max_value=3100, required=False)
+@lightbulb.option("member", "Пользователь", type=hikari.Member, required=True)
+@lightbulb.command("change", "Изменить данные пользователя")
+@lightbulb.implements(lightbulb.SlashSubCommand)
+async def profile_update(ctx: SamuroSlashContext) -> None:
+    player = await HotsPlayer.fetch(ctx.options.member, ctx.guild_id)
+
+    player.mmr = ctx.options.mmr or player.mmr
+    player.blocked = ctx.options.block if ctx.options.block is not None else player.blocked
+
+    await player.update()
+    await ctx.respond(
+        embed=hikari.Embed(
+            title="Обновление выполнено",
+            description="Профиль игрока изменен",
+            color=const.EMBED_BLUE,
+        ),
+        flags=hikari.MessageFlag.EPHEMERAL
+    )
+
+@hots_profile.child
 @lightbulb.option("battletag", "Батлтег игрока", type=str, required=True)
 @lightbulb.option("member", "Пользователь", type=hikari.Member, required=True)
 @lightbulb.command("add", "Добавить профиль в базу", pass_options=True)
@@ -437,7 +460,7 @@ async def event_list(ctx: SamuroSlashContext) -> None:
     events = await HotsEvent.fetch_all(guild_id=ctx.guild_id)
 
     if not events:
-        ctx.respond(
+        await ctx.respond(
             "Нет событий на сервере"
         )
 

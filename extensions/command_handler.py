@@ -182,6 +182,17 @@ async def application_error_handler(ctx: SamuroContext, error: BaseException) ->
 
     if isinstance(error, lightbulb.CommandInvocationError):
 
+        if isinstance(error.original, errors.UserBlacklistedError):
+            await ctx.respond(
+                embed=hikari.Embed(
+                    title="❌ Пользователь заблокирован",
+                    description=error.original,
+                    color=const.ERROR_COLOR,
+                ),
+                flags=hikari.MessageFlag.EPHEMERAL,
+            )
+            return
+
         if isinstance(error.original, errors.HeroNotFound):
             await ctx.respond(
                 embed=hikari.Embed(

@@ -97,7 +97,10 @@ async def matchmaking_5x5(ctx: SamuroSlashContext, type: str, players_str: str, 
     check_type(type, members)
     for member in members:
         player = await HotsPlayer.fetch(member, ctx.guild_id)
-        players.append(player)
+        if not player.blocked:
+            players.append(player)
+        else:
+            raise errors.UserBlacklistedError(f"{player.battle_tag} заблокирован и не может принимать участие")
         while player.mmr in unique_mmr:
             player.mmr += 1
         unique_mmr.append(player.mmr)
@@ -406,6 +409,7 @@ class HotsPlayer(DatabaseModel):
     mmr: int = 2200
     league: HeroLeagues = HeroLeagues.BRONZE
     division: int = 0
+    blocked: bool = False
     stats: PlayerStats = None
 
     async def log_page(self) -> list[hikari.Embed]:
@@ -419,8 +423,9 @@ class HotsPlayer(DatabaseModel):
         paginator = lightbulb.utils.StringPaginator(max_chars=400)
 
         for record in records:
-            mmr = '+'+str(record.get("delta_mmr")) if record.get("winner") else '-'+str(record.get("delta_mmr"))
-            mmr = "?" if mmr[1:] == '0' else mmr
+            mmr = str(record.get("delta_mmr"))
+            if mmr != "0":
+                mmr = '+' + mmr if record.get("winner") else '-' + mmr
             result = const.EMOJI_GREEN_UP if record.get("winner") else const.EMOJI_RED_DOWN
             paginator.add_line(f"{result} ID: {record.get('event_id')} {record.get('map')} ({mmr})")
 
@@ -437,16 +442,21 @@ class HotsPlayer(DatabaseModel):
             if self.league in [HeroLeagues.MASTER, HeroLeagues.GRANDMASTER]
             else f"{self.league} {self.division}"
         )
-        embed = hikari.Embed(title=self.battle_tag, color=const.EMBED_BLUE)
-        embed.set_thumbnail(self.member.avatar_url)
-        embed.add_field(name="Лига", value=league, inline=True)
-        embed.add_field(name="ММР", value=str(self.mmr), inline=True)
+        if not self.blocked:
+            embed = hikari.Embed(title=self.battle_tag, color=const.EMBED_BLUE)
+            embed.set_thumbnail(self.member.avatar_url)
+            embed.add_field(name="Лига", value=league, inline=True)
+            embed.add_field(name="ММР", value=str(self.mmr), inline=True)
 
-        if self.stats.battle_tag:
-            await self.add_stats_info(embed=embed)
+            if self.stats.battle_tag:
+                await self.add_stats_info(embed=embed)
 
-        if self.stats.achievements:
-            await self.add_achievements_info(embed=embed)
+            if self.stats.achievements:
+                await self.add_achievements_info(embed=embed)
+
+        else:
+            embed = hikari.Embed(title=self.battle_tag, description="Профиль заблокирован", color=const.ERROR_COLOR)
+            embed.set_thumbnail(self.member.avatar_url)
 
         return embed
 
@@ -492,21 +502,23 @@ class HotsPlayer(DatabaseModel):
         return embed
 
     async def update(self) -> None:
+        self.league, self.division = self.get_league_division()
         await self._db.execute(
             """
-            INSERT INTO players (id, guild_id, btag, mmr, league, division)
-            VALUES ($1, $2, $3, $4, $5, $6)
+            INSERT INTO players (id, guild_id, btag, mmr, league, division, blocked)
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
             ON CONFLICT (id) DO
-            UPDATE SET guild_id = $2, btag = $3, mmr = $4, league = $5, division = $6""",
+            UPDATE SET guild_id = $2, btag = $3, mmr = $4, league = $5, division = $6, blocked = $7""",
             self.id,
             self.guild_id,
             self.battle_tag,
             self.mmr,
             self.league,
             self.division,
+            self.blocked
         )
 
-    async def update_stats(self, winner: bool, points: int)-> None:
+    async def update_stats(self, winner: bool, points: int) -> None:
         if winner:
             self.stats.winstreak = self.stats.winstreak + 1 if self.stats.winstreak >= 0 else 1
             self.stats.win += 1
@@ -682,6 +694,7 @@ class HotsPlayer(DatabaseModel):
             league=leagues.get(record.get("league")),
             division=record.get("division"),
             stats=await PlayerStats.fetch(record.get("id"), guild_id),
+            blocked=record.get("blocked")
         )
 
     @classmethod
@@ -718,6 +731,7 @@ class HotsPlayer(DatabaseModel):
             league=leagues.get(record.get("league")),
             division=record.get("division"),
             stats=await PlayerStats.fetch(record.get("id"), guild),
+            blocked=record.get("blocked")
         )
 
 
@@ -930,6 +944,7 @@ class HotsEvent(DatabaseModel):
                 await player.ending_5x5(event_id=self.id, mmr=self.delta_mmr, points=self.win_points, winner=False,
                                         map=self.map)
         elif self.type == EventTypes.unranked:
+            self.delta_mmr = 0
             for player in winner_team:
                 await player.ending_unranked(event_id=self.id, mmr=self.delta_mmr, points=self.win_points, winner=True,
                                              map=self.map)
