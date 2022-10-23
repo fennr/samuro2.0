@@ -613,6 +613,72 @@ class HotsPlayer(DatabaseModel):
                 raise errors.DontHaveStormPlays
         raise errors.DontHaveStormPlays
 
+    async def versus_stats(self, player2: hikari.Member) -> hikari.Embed:
+        if self.id == player2.id:
+            return hikari.Embed(
+                title="❌ Ошибка сравнения",
+                description="Выберите другого игрока для сравнения с собой",
+                color=const.ERROR_COLOR
+            )
+
+        pl2 = await HotsPlayer.fetch(player2, self.guild_id)
+        records = await self._db.fetch(
+            """
+            SELECT A.id, A.winner, A.event_id, B.id, B.winner FROM
+                (SELECT * FROM event_log WHERE id=$1) AS A
+            INNER JOIN
+                (SELECT * FROM event_log WHERE id=$2) AS B
+                    ON A.event_id = B.event_id
+                ORDER BY A.event_id DESC
+            """,
+            self.id,
+            pl2.id
+        )
+
+        if not records:
+            return hikari.Embed(title=f"🔍 История матчей с {pl2.battle_tag}", description="Общих игр не найдено", color=const.EMBED_YELLOW)
+
+        else:
+            win_together = 0
+            lose_together = 0
+            win_versus = 0
+            lose_versus = 0
+            for record in records:
+                values = list(record.values())
+                a_id = values[0]
+                a_winner = values[1]
+                event_id = values[2]
+                b_id = values[3]
+                b_winner = values[4]
+                if a_winner and b_winner:
+                    win_together += 1
+                elif a_winner and not b_winner:
+                    win_versus += 1
+                elif not a_winner and b_winner:
+                    lose_versus += 1
+                elif not a_winner and not b_winner:
+                    lose_together += 1
+
+            embed = hikari.Embed(
+                title=f"🔍 История матчей с {pl2.battle_tag}",
+                description=f"Общее количество матчей - `{len(records)}`",
+                color=const.EMBED_BLUE
+            )
+            embed.add_field(
+                name="Союзники",
+                value=f"• Побед: `{win_together}`\n• Поражений: `{lose_together}`",
+                inline=True
+            )
+            embed.add_field(
+                name="Соперники",
+                value=f"• Побед: `{win_versus}`\n• Поражений: `{lose_versus}`",
+                inline=True
+            )
+            return embed
+
+
+
+
     @classmethod
     async def add(cls, member: hikari.Member, battletag: str):
         record = await cls._db.fetchrow(

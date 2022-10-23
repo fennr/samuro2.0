@@ -364,6 +364,18 @@ async def get_profile_user_command(ctx: SamuroUserContext, target: hikari.Member
 
 
 @hots_profile.child
+@lightbulb.option("member", "Пользователь для сравнения", type=hikari.Member, required=True)
+@lightbulb.command("versus", "Посмотреть статистику матчей с игроком", pass_options=True)
+@lightbulb.implements(lightbulb.SlashSubCommand)
+async def profile_versus(ctx: SamuroSlashContext, member: hikari.Member) -> None:
+    player = await HotsPlayer.fetch(ctx.member, ctx.guild_id)
+    embed = await player.versus_stats(member)
+
+    await ctx.respond(embed=embed)
+
+
+
+@hots_profile.child
 @lightbulb.add_checks(is_lead)
 @lightbulb.option("block", "Заблокировать", type=bool, required=False)
 @lightbulb.option("mmr", "Изменить ММР", type=int, min_value=2200, max_value=3100, required=False)
