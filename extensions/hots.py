@@ -377,6 +377,7 @@ async def profile_versus(ctx: SamuroSlashContext, member: hikari.Member) -> None
 
 @hots_profile.child
 @lightbulb.add_checks(is_lead)
+@lightbulb.option("comment", "Комментарий с причиной", type=str, required=True)
 @lightbulb.option("block", "Заблокировать", type=bool, required=False)
 @lightbulb.option("mmr", "Изменить ММР", type=int, min_value=2200, max_value=3100, required=False)
 @lightbulb.option("member", "Пользователь", type=hikari.Member, required=True)
@@ -385,8 +386,15 @@ async def profile_versus(ctx: SamuroSlashContext, member: hikari.Member) -> None
 async def profile_update(ctx: SamuroSlashContext) -> None:
     player = await HotsPlayer.fetch(ctx.options.member, ctx.guild_id)
 
-    player.mmr = ctx.options.mmr or player.mmr
-    player.blocked = ctx.options.block if ctx.options.block is not None else player.blocked
+    if ctx.options.mmr:
+        await player.change_log(ctx.author, new_mmr=ctx.options.mmr, message=ctx.options.comment)
+        player.mmr = ctx.options.mmr
+    if ctx.options.block is not None:
+        if ctx.options.block:
+            await player.change_log(ctx.author, new_mmr=ctx.options.mmr, message=f"{player.battle_tag} заблокирован: {ctx.options.comment}")
+        else:
+            await player.change_log(ctx.author, new_mmr=ctx.options.mmr, message=f"{player.battle_tag} разблокирован: {ctx.options.comment}")
+        player.blocked = ctx.options.block
 
     await player.update()
     await ctx.respond(

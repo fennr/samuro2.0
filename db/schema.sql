@@ -221,6 +221,29 @@ CREATE TABLE IF NOT EXISTS event_history
     map       varchar default 'unknown'
 );
 
+create unique index  if not exists eventhistory_event_id_uindex
+    on event_history (event_id);
+
+create table IF NOT EXISTS players_stats
+(
+    id        bigint                                     not null
+        constraint players_stats_players_id_fk
+            references players
+            on delete cascade,
+    guild_id  guild_id                                       not null,
+    win       integer,
+    lose      integer,
+    points    integer,
+    btag      battletag,
+    winstreak integer default 0,
+    max_ws    integer default 0,
+    season    varchar default 'Season 01'::character varying not null,
+    constraint players_stats_pk
+        primary key (id, guild_id, season)
+);
+
+comment on table players_stats is 'Данные о победах и поражениях';
+
 create table IF NOT EXISTS event_log
 (
     id        bigint                                  not null,
@@ -242,26 +265,6 @@ create table IF NOT EXISTS event_log
 );
 
 comment on table event_log is 'Все записи о проведенных матчах';
-
-create table IF NOT EXISTS players_stats
-(
-    id        bigint                                     not null
-        constraint players_stats_players_id_fk
-            references players
-            on delete cascade,
-    guild_id  guild_id                                       not null,
-    win       integer,
-    lose      integer,
-    points    integer,
-    btag      battletag,
-    winstreak integer default 0,
-    max_ws    integer default 0,
-    season    varchar default 'Season 01'::character varying not null,
-    constraint players_stats_pk
-        primary key (id, guild_id, season)
-);
-
-comment on table players_stats is 'Данные о победах и поражениях';
 
 create table IF NOT EXISTS vote_log
 (
@@ -322,6 +325,23 @@ CREATE TABLE IF NOT EXISTS user_achievements
 
 comment on table user_achievements is 'Связи между игроком и достижениями';
 
+
+CREATE TABLE IF NOT EXISTS profile_change_log
+(
+    id          bigint,
+    guild_id    bigint,
+    admin_id    bigint,
+    datetime    timestamp,
+    old_mmr     int,
+    new_mmr     int,
+    message     text,
+    constraint players_id_key
+        foreign key (id) references players (id)
+            on update cascade,
+    constraint players_admin_key
+        foreign key (admin_id) references players (id)
+            on update cascade
+);
 
 
 
