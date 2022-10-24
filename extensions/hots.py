@@ -390,7 +390,7 @@ async def profile_update(ctx: SamuroSlashContext) -> None:
         await player.change_log(
             admin=ctx.author,
             type="mmr change",
-            message=f"{player.mmr} -> {ctx.options.mmr}: {ctx.options.comment}"
+            message=f"{player.battle_tag} {player.mmr} -> {ctx.options.mmr}: {ctx.options.comment}"
         )
         player.mmr = ctx.options.mmr
     if ctx.options.block is not None:
@@ -398,13 +398,13 @@ async def profile_update(ctx: SamuroSlashContext) -> None:
             await player.change_log(
                 admin=ctx.author,
                 type="block",
-                message=f"{player.battle_tag} заблокирован: {ctx.options.comment}"
+                message=f"{player.battle_tag} ban: {ctx.options.comment}"
             )
         else:
             await player.change_log(
                 admin=ctx.author,
                 type="unblock",
-                message=f"{player.battle_tag} разблокирован: {ctx.options.comment}"
+                message=f"{player.battle_tag} unban: {ctx.options.comment}"
             )
         player.blocked = ctx.options.block
 
