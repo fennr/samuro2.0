@@ -460,34 +460,20 @@ class HotsPlayer(DatabaseModel):
 
         return embed
 
-    async def change_log(self, admin: hikari.Member, new_mmr: int = 0, message: str = None):
+    async def change_log(self, admin: hikari.Member, type: str, message: str):
         now = datetime.now()
-        if new_mmr:
-            await self._db.execute(
-                """
-                INSERT INTO profile_change_log (id, guild_id, admin_id, datetime, old_mmr, new_mmr, message) 
-                VALUES ($1, $2, $3, $4, $5, $6, $7)
-                """,
-                self.id,
-                self.guild_id,
-                admin.id,
-                now,
-                self.mmr,
-                new_mmr,
-                message
-            )
-        else:
-            await self._db.execute(
-                """
-                INSERT INTO profile_change_log (id, guild_id, admin_id, datetime, message) 
-                VALUES ($1, $2, $3, $4, $5)
-                """,
-                self.id,
-                self.guild_id,
-                admin.id,
-                now,
-                message
-            )
+        await self._db.execute(
+            """
+            INSERT INTO profile_change_log (id, guild_id, admin_id, datetime, type, message) 
+            VALUES ($1, $2, $3, $4, $5, $6)
+            """,
+            self.id,
+            self.guild_id,
+            admin.id,
+            now,
+            type,
+            message
+        )
 
     async def add_stats_info(self, embed: hikari.Embed) -> hikari.Embed:
 

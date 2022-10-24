@@ -332,8 +332,7 @@ CREATE TABLE IF NOT EXISTS profile_change_log
     guild_id    bigint,
     admin_id    bigint,
     datetime    timestamp,
-    old_mmr     int,
-    new_mmr     int,
+    type        varchar,
     message     text,
     constraint players_id_key
         foreign key (id) references players (id)

@@ -387,13 +387,25 @@ async def profile_update(ctx: SamuroSlashContext) -> None:
     player = await HotsPlayer.fetch(ctx.options.member, ctx.guild_id)
 
     if ctx.options.mmr:
-        await player.change_log(ctx.author, new_mmr=ctx.options.mmr, message=ctx.options.comment)
+        await player.change_log(
+            admin=ctx.author,
+            type="mmr change",
+            message=f"{player.mmr} -> {ctx.options.mmr}: {ctx.options.comment}"
+        )
         player.mmr = ctx.options.mmr
     if ctx.options.block is not None:
         if ctx.options.block:
-            await player.change_log(ctx.author, new_mmr=ctx.options.mmr, message=f"{player.battle_tag} заблокирован: {ctx.options.comment}")
+            await player.change_log(
+                admin=ctx.author,
+                type="block",
+                message=f"{player.battle_tag} заблокирован: {ctx.options.comment}"
+            )
         else:
-            await player.change_log(ctx.author, new_mmr=ctx.options.mmr, message=f"{player.battle_tag} разблокирован: {ctx.options.comment}")
+            await player.change_log(
+                admin=ctx.author,
+                type="unblock",
+                message=f"{player.battle_tag} разблокирован: {ctx.options.comment}"
+            )
         player.blocked = ctx.options.block
 
     await player.update()
