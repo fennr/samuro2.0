@@ -208,7 +208,7 @@ async def application_error_handler(ctx: SamuroContext, error: BaseException) ->
             await ctx.respond(
                 embed=hikari.Embed(
                     title="❌ Профиль не найден",
-                    description=f"Используйте команду `/profile add`",
+                    description=f"{error.original}\nИспользуйте команду `/profile add`",
                     color=const.ERROR_COLOR,
                 ),
                 flags=hikari.MessageFlag.EPHEMERAL,
