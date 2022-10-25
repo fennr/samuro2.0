@@ -482,20 +482,20 @@ class HotsPlayer(DatabaseModel):
         # Позиция в рейтинге
         record = await self._db.fetchrow(
             """
-            SELECT A.*
-            FROM (SELECT *,
+            SELECT *
+            FROM (SELECT A.*,
                          row_number() over (
                              ORDER BY mmr DESC
                              ) as league_rating
-                  FROM players
-                  WHERE league = $1) as A
+                  FROM players as A
                 INNER JOIN players_stats as B
                     ON A.id = B.id
                     AND A.guild_id = B.guild_id
                 INNER JOIN global_config gc
                     ON B.guild_id = gc.guild_id
                     AND B.season = gc.season
-            WHERE A.id = $2
+                WHERE A.league = $1) AS pl
+            WHERE pl.id = $2
             """,
             HeroLeagues(self.league).name.capitalize(),
             self.id
