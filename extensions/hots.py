@@ -530,6 +530,45 @@ async def event_add_log(ctx: SamuroSlashContext, event_id: int) -> None:
 
 @hots_events.child
 @lightbulb.add_checks(is_lead)
+@lightbulb.command(name="map", description="Выбор карты")
+@lightbulb.implements(lightbulb.SlashSubCommand)
+async def event_map(ctx: SamuroSlashContext) -> None:
+
+    maps = '''
+0. Alterac Pass
+1. Battlefield Of Eternity
+2. Braxis Holdout
+3. Cursed Hollow
+4. Dragon Shire
+5. Garden of Terror
+6. Hanamura Temple
+7. Infernal Shrines
+8. Sky Temple
+9. Tomb of the Spider Queen
+10. Towers of Doom
+    '''
+    numbers = ['0️⃣', '1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟']
+
+    embed = hikari.Embed(
+        title="Выбор карты",
+        description=maps,
+        color=const.EMBED_BLUE,
+    )
+    message = await ctx.app.rest.create_message(ctx.channel_id, embed=embed)
+    task = asyncio.create_task(utils.helpers.add_emoji(message, numbers))
+
+    await ctx.respond(
+        embed=hikari.Embed(
+            title="✅ Голосование за выбор карты создано!",
+            color=const.EMBED_GREEN),
+        flags=hikari.MessageFlag.EPHEMERAL,
+    )
+
+    await task
+
+
+@hots_events.child
+@lightbulb.add_checks(is_lead)
 @lightbulb.option(name="lose_p", description="Баллы за поражение", type=int, min_value=1, max_value=4, default=1)
 @lightbulb.option(name="win_p", description="Баллы за победу", type=int, min_value=4, max_value=8, default=4)
 @lightbulb.option(name="mmr", description="Изменение ммр за матч", type=int, default=4, min_value=0, max_value=8)
