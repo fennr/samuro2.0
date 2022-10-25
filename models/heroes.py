@@ -787,7 +787,7 @@ class HotsPlayer(DatabaseModel):
         # TODO: Получение профиля с heroesprofile
 
         if not record:
-            logger.warning(f"Попытка посмотреть несуществующий профиль")
+            logger.warning(f"Попытка посмотреть несуществующий профиль id={user.id}")
             raise errors.ProfileNotFound
             """return cls(
                 hikari.Snowflake(user), hikari.Snowflake(guild), battle_tag=None, mmr=2200, league=HeroLeagues.BRONZE, division=5
