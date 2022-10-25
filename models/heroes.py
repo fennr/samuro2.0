@@ -1113,7 +1113,7 @@ class HotsEvent(DatabaseModel):
             is_winner = self.winner == EventWinner.RED
             points = self.win_points if is_winner else self.lose_points
             await self._db.execute(
-                """INSERT INTO event_log (id, guild_id, event_id, winner, points, delta_mmr) 
+                """INSERT INTO event_log (id, guild_id, event_id, winner, points, delta_mmr, map, season) 
                 VALUES ($1, $2, $3, $4, $5, $6)
                 ON CONFLICT DO NOTHING 
                 """,
@@ -1123,6 +1123,8 @@ class HotsEvent(DatabaseModel):
                 is_winner,
                 points,
                 self.delta_mmr,
+                self.map,
+                self.season
             )
         logger.info(f"Событие #{self.id} добавлено")
 
