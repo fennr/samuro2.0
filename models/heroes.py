@@ -598,7 +598,7 @@ class HotsPlayer(DatabaseModel):
             SET winner = $4, points = $5, delta_mmr = $6, season = $8 
             """,
             self.id,
-            self.guild_id,
+            self.stats.guild_id,
             event_id,
             winner,
             points,
