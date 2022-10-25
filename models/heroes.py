@@ -315,12 +315,13 @@ class PlayerStats(DatabaseModel):
     async def update(self):
         await self._db.execute(
             """
-            INSERT INTO players_stats (id, guild_id, season, points, win, lose, winstreak, max_ws)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+            INSERT INTO players_stats (id, guild_id, btag, season, points, win, lose, winstreak, max_ws)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
             ON CONFLICT (id, guild_id, season) DO
-            UPDATE SET points = $4, win = $5, lose = $6, winstreak = $7, max_ws = $8""",
+            UPDATE SET points = $5, win = $6, lose = $7, winstreak = $8, max_ws = $9""",
             self.id,
             self.guild_id,
+            self.battle_tag,
             self.season,
             self.points,
             self.win,
