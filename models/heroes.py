@@ -477,14 +477,42 @@ class HotsPlayer(DatabaseModel):
 
     async def add_stats_info(self, embed: hikari.Embed) -> hikari.Embed:
 
+        league_rating = ""
+        # Позиция в рейтинге
+        record = await self._db.fetchrow(
+            """
+            SELECT A.*
+            FROM (SELECT *,
+                         row_number() over (
+                             ORDER BY mmr DESC
+                             ) as league_rating
+                  FROM players
+                  WHERE league = $1) as A
+                INNER JOIN players_stats as B
+                    ON A.id = B.id
+                    AND A.guild_id = B.guild_id
+                INNER JOIN global_config gc
+                    ON B.guild_id = gc.guild_id
+                    AND B.season = gc.season
+            WHERE A.id = $2
+            """,
+            HeroLeagues(self.league).name.capitalize(),
+            self.id
+        )
+        if record:
+            league_rating = f"• Позиция в лиге _{self.league}_: `{record.get('league_rating')}`"
+
         embed.add_field(
             name=f"Текущий сезон: {self.stats.season}",
-            value=f"""• Баллов: `{self.stats.points or "-"}`
+            value=f"""{league_rating}
+• Баллов: `{self.stats.points or "-"}`
 • Побед: `{self.stats.win or "-"}`
 • Поражений: `{self.stats.lose or "-"}`  
 • Лучший винстрик: `{self.stats.max_ws or "-"}`      
             """
         )
+
+        # Ставки
         records = await self._db.fetch(
             """
             SELECT * FROM vote_log WHERE id = $1
