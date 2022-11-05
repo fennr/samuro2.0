@@ -86,6 +86,21 @@ def sort_by_mmr(player):
     return player.mmr
 
 
+async def fix_league_by_mmr(ctx: SamuroSlashContext):
+    records = await ctx.app.db.fetch(
+        """
+        SELECT * FROM players
+        """
+    )
+    for record in records:
+        guild_id = int(record.get("guild_id"))
+        member_id = int(record.get('id'))
+        member = hikari.Member
+        player = await HotsPlayer.fetch(member_id, guild_id)
+        await player.update()
+
+
+
 async def matchmaking_5x5(ctx: SamuroSlashContext, type: str, players_str: str, manual:bool = False):
     players_id = util.players_parse(players_str)
     players = []
@@ -765,7 +780,7 @@ class HotsPlayer(DatabaseModel):
         return profile
 
     @classmethod
-    async def fetch(cls, user: hikari.Member, guild_id: hikari.SnowflakeishOr[hikari.PartialGuild]):
+    async def fetch(cls, user: hikari.Member | int, guild_id: hikari.SnowflakeishOr[hikari.PartialGuild]):
         """Fetch a user from the database. If not present, returns a default DatabaseUser object.
 
         Parameters
@@ -780,11 +795,16 @@ class HotsPlayer(DatabaseModel):
         DatabaseUser
             An object representing stored user data.
         """
-        record = await cls._db.fetchrow(
-            """SELECT * FROM players WHERE id = $1""",
-            user.id,
-        )
-
+        if isinstance(user, hikari.Member):
+            record = await cls._db.fetchrow(
+                """SELECT * FROM players WHERE id = $1""",
+                user.id,
+            )
+        else:
+            record = await cls._db.fetchrow(
+                """SELECT * FROM players WHERE id = $1""",
+                user,
+            )
         # TODO: Получение профиля с heroesprofile
 
         if not record:

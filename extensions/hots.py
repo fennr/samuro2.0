@@ -25,7 +25,7 @@ from models.components import *
 from models.views import AuthorOnlyView
 from models.context import SamuroSlashContext
 from models.plugin import SamuroPlugin
-from models.heroes import HotsHero, HotsPlayer, HotsEvent
+from models.heroes import HotsHero, HotsPlayer, HotsEvent, fix_league_by_mmr
 from utils import helpers, hots as util
 from utils.hots import EventWinner
 from miru.abc import ViewItem
@@ -379,7 +379,7 @@ async def profile_versus(ctx: SamuroSlashContext, member: hikari.Member) -> None
 @lightbulb.add_checks(is_lead)
 @lightbulb.option("comment", "Комментарий с причиной", type=str, required=True)
 @lightbulb.option("block", "Заблокировать", type=bool, required=False)
-@lightbulb.option("mmr", "Изменить ММР", type=int, min_value=2200, max_value=3100, required=False)
+@lightbulb.option("mmr", "Изменить ММР", type=int, min_value=2200, max_value=3200, required=False)
 @lightbulb.option("member", "Пользователь", type=hikari.Member, required=True)
 @lightbulb.command("change", "Изменить данные пользователя")
 @lightbulb.implements(lightbulb.SlashSubCommand)
@@ -462,6 +462,25 @@ async def get_history_user_command(ctx: SamuroUserContext, target: hikari.Member
 
     navigator = models.AuthorOnlyNavigator(ctx, pages=embeds)
     await navigator.send(ctx.interaction)
+
+
+@hots.command
+@lightbulb.add_checks(lightbulb.owner_only)
+@lightbulb.command("fix", "Исправления")
+@lightbulb.implements(lightbulb.SlashCommandGroup)
+async def hots_fix(ctx: SamuroSlashContext) -> None:
+    pass
+
+@hots_fix.child
+@lightbulb.add_checks(lightbulb.owner_only)
+@lightbulb.command("leagues", "Исправить лиги по ммр")
+@lightbulb.implements(lightbulb.SlashSubCommand)
+async def fix_leagues(ctx: SamuroSlashContext) -> None:
+    await fix_league_by_mmr(ctx)
+    await ctx.respond(
+        "Лиги игроков исправлены",
+        flags=hikari.MessageFlag.EPHEMERAL
+    )
 
 
 @hots.command
