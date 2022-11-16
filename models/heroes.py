@@ -436,6 +436,10 @@ class HotsPlayer(DatabaseModel):
             """,
             self.id,
         )
+
+        if not records:
+            raise errors.DontHaveLogs
+
         paginator = lightbulb.utils.StringPaginator(max_chars=400)
 
         for record in records:

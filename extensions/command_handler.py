@@ -249,6 +249,17 @@ async def application_error_handler(ctx: SamuroContext, error: BaseException) ->
             )
             return
 
+        if isinstance(error.original, errors.DontHaveLogs):
+            await ctx.respond(
+                embed=hikari.Embed(
+                    title="❌ История матчей пуста",
+                    description=f"Пока не сыграно ни одного матча на сервере.",
+                    color=const.ERROR_COLOR,
+                ),
+                flags=hikari.MessageFlag.EPHEMERAL,
+            )
+            return
+
         if isinstance(error.original, errors.BadPlayersCount):
             await ctx.respond(
                 embed=hikari.Embed(
