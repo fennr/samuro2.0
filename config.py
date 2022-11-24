@@ -15,7 +15,7 @@ class Config:
 
     ERROR_LOGGING_CHANNEL: int = 1011166844725497856  # Error tracebacks will be sent here if specified
 
-    DB_BACKUP_CHANNEL: int = 880863858653286401  # DB backups will be sent here if specified
+    DB_BACKUP_CHANNEL: int = 1011166844725497856  # DB backups will be sent here if specified
 
     DEBUG_GUILDS: t.Sequence[int] = (845658540341592096, )  # Commands will only be registered here if DEV_MODE is on
 

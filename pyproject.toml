@@ -26,8 +26,8 @@ uvloop = {version = "==0.16.0", platform="linux"}
 aiodns = "~=3.0"
 Brotli = "~=1.0"
 kosu = {git = "https://github.com/HyperGH/kosu.git", branch="main"}
-hikari-lightbulb = {git = "https://github.com/HyperGH/hikari-lightbulb.git", branch="development"}
-hikari-miru = {git = "https://github.com/HyperGH/hikari-miru.git", branch="cursed/branch"}
+hikari-lightbulb = "^2.2.3"
+hikari-miru = "^1.2.0"
 beautifulsoup4 = "^4.11.1"
 requests = "^2.28.1"
 
