@@ -5,9 +5,11 @@ services:
     restart: always
     expose:
       - $POSTGRES_PORT:-5432
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_DB: ${POSTGRES_DB:-samuro}
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
       POSTGRES_PORT: ${POSTGRES_PORT:-5432}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?err}
     volumes:
@@ -22,6 +24,8 @@ services:
         args:
           postgres_version: ${POSTGRES_VERSION:-14}
     command: ["python3.10", "-O", "main.py"]
+    env_file:
+      - .env
     depends_on:
       - samuro-db
     restart: always

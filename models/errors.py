@@ -61,6 +61,12 @@ class ProfileNotFound(Exception):
     """
 
 
+class DontHaveLogs(Exception):
+    """
+    Raised when dont have plays in event log
+    """
+
+
 class DontHaveStormPlays(Exception):
     """
     Raised when dont have Profile or not have Storm League games

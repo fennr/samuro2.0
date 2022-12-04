@@ -626,6 +626,8 @@ async def event_remove(ctx: SamuroSlashContext) -> None:
 @lightbulb.command(name="end", description="Завершить ивент", pass_options=True)
 @lightbulb.implements(lightbulb.SlashSubCommand)
 async def event_ending(ctx: SamuroSlashContext, winner: str) -> None:
+    await ctx.respond(hikari.ResponseType.DEFERRED_MESSAGE_CREATE)
+
     event = await HotsEvent.get_active_event(ctx)
 
     embed = await event.ending(ctx=ctx, winner=winner)
