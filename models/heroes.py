@@ -468,7 +468,7 @@ class HotsPlayer(DatabaseModel):
             embed.add_field(name="Лига", value=league, inline=True)
             embed.add_field(name="ММР", value=str(self.mmr), inline=True)
 
-            if self.stats.battle_tag:
+            if self.stats.points > 0:
                 await self.add_stats_info(embed=embed)
 
             if self.stats.achievements:
