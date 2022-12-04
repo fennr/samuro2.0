@@ -346,11 +346,11 @@ class PlayerStats(DatabaseModel):
         )
 
     @classmethod
-    async def clear(cls, user: hikari.SnowflakeishOr[hikari.PartialUser], guild: hikari.SnowflakeishOr[hikari.PartialGuild]) -> None:
+    async def clear(cls, user: hikari.SnowflakeishOr[hikari.PartialUser], guild: hikari.SnowflakeishOr[hikari.PartialGuild], battle_tag=None) -> None:
         return cls(
             hikari.Snowflake(user),
             hikari.Snowflake(guild),
-            battle_tag=None,
+            battle_tag=battle_tag,
             points=0,
             win=0,
             lose=0,
@@ -478,7 +478,7 @@ class HotsPlayer(DatabaseModel):
 
     async def change_log(self, admin: hikari.Member, type: str, message: str):
         now = datetime.now()
-        await self._db.execute(
+        await self.db.execute(
             """
             INSERT INTO profile_change_log (id, guild_id, admin_id, datetime, type, message) 
             VALUES ($1, $2, $3, $4, $5, $6)
@@ -495,7 +495,7 @@ class HotsPlayer(DatabaseModel):
 
         league_rating = ""
         # Позиция в рейтинге
-        record = await self._db.fetchrow(
+        record = await self.app.db.fetchrow(
             """
             SELECT *
             FROM (SELECT A.*,
@@ -775,7 +775,7 @@ class HotsPlayer(DatabaseModel):
 
         # дозаполнить данные
         profile.league = leagues.get(profile.league)
-        profile.stats = await PlayerStats.clear(profile.id, profile.guild_id)
+        profile.stats = await PlayerStats.clear(profile.id, profile.guild_id, battle_tag=battletag)
 
         return profile
 
