@@ -499,7 +499,7 @@ class HotsPlayer(DatabaseModel):
 
         league_rating = ""
         # Позиция в рейтинге
-        record = await self.app.db.fetchrow(
+        record = await self.db.fetchrow(
             """
             SELECT *
             FROM (SELECT A.*,
