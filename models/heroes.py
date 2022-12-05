@@ -482,7 +482,7 @@ class HotsPlayer(DatabaseModel):
 
     async def change_log(self, admin: hikari.Member, type: str, message: str):
         now = datetime.now()
-        await self.db.execute(
+        await self._db.execute(
             """
             INSERT INTO profile_change_log (id, guild_id, admin_id, datetime, type, message) 
             VALUES ($1, $2, $3, $4, $5, $6)
@@ -499,7 +499,7 @@ class HotsPlayer(DatabaseModel):
 
         league_rating = ""
         # Позиция в рейтинге
-        record = await self.db.fetchrow(
+        record = await self._db.fetchrow(
             """
             SELECT *
             FROM (SELECT A.*,
