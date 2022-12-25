@@ -745,8 +745,9 @@ class HotsPlayer(DatabaseModel):
     @classmethod
     async def add(cls, member: hikari.Member, battletag: str):
         record = await cls._db.fetchrow(
-            """SELECT * FROM players WHERE id = $1""",
+            """SELECT * FROM players WHERE id = $1 OR btag = $2""",
             member.id,
+            battletag
         )
         if record:
             logger.warning(f"Профиль уже создан")
