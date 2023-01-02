@@ -346,7 +346,7 @@ class PlayerStats(DatabaseModel):
         )
 
     @classmethod
-    async def clear(cls, user: hikari.SnowflakeishOr[hikari.PartialUser], guild: hikari.SnowflakeishOr[hikari.PartialGuild], battle_tag=None) -> None:
+    async def clear(cls, user: hikari.SnowflakeishOr[hikari.PartialUser], guild: hikari.SnowflakeishOr[hikari.PartialGuild], battle_tag) -> None:
         return cls(
             hikari.Snowflake(user),
             hikari.Snowflake(guild),
@@ -361,8 +361,8 @@ class PlayerStats(DatabaseModel):
 
     @classmethod
     async def fetch(
-            cls, user: hikari.SnowflakeishOr[hikari.PartialUser], guild: hikari.SnowflakeishOr[hikari.PartialGuild]
-    ) -> None:
+            cls, user: hikari.SnowflakeishOr[hikari.PartialUser], guild: hikari.SnowflakeishOr[hikari.PartialGuild],
+            btag: str) -> None:
         season = await cls._db.fetchval(
             """
             SELECT season FROM global_config where guild_id = $1
@@ -371,7 +371,7 @@ class PlayerStats(DatabaseModel):
         )
         record = await cls._db.fetchrow(
             """
-            SELECT * FROM players_stats WHERE id = $1 AND guild_id = $2 AND season = $3
+            SELECT * FROM players_stats WHERE id = $1 AND guild_id = $2 AND btag = btag AND season = $3
             """,
             hikari.Snowflake(user),
             hikari.Snowflake(guild),
@@ -381,7 +381,7 @@ class PlayerStats(DatabaseModel):
             return cls(
                 hikari.Snowflake(user),
                 hikari.Snowflake(guild),
-                battle_tag=None,
+                battle_tag=btag,
                 points=0,
                 win=0,
                 lose=0,
@@ -828,7 +828,7 @@ class HotsPlayer(DatabaseModel):
             mmr=record.get("mmr"),
             league=leagues.get(record.get("league")),
             division=record.get("division"),
-            stats=await PlayerStats.fetch(record.get("id"), guild_id),
+            stats=await PlayerStats.fetch(record.get("id"), guild_id, record.get("btag")),
             blocked=record.get("blocked")
         )
 
@@ -865,7 +865,7 @@ class HotsPlayer(DatabaseModel):
             mmr=record.get("mmr"),
             league=leagues.get(record.get("league")),
             division=record.get("division"),
-            stats=await PlayerStats.fetch(record.get("id"), guild),
+            stats=await PlayerStats.fetch(record.get("id"), guild, record.get("btag")),
             blocked=record.get("blocked")
         )
 
@@ -1076,7 +1076,7 @@ class HotsEvent(DatabaseModel):
                 await player.ending_5x5(event_id=self.id, mmr=self.delta_mmr, points=self.win_points, winner=True,
                                         map=self.map)
             for player in loser_team:
-                await player.ending_5x5(event_id=self.id, mmr=self.delta_mmr, points=self.win_points, winner=False,
+                await player.ending_5x5(event_id=self.id, mmr=self.delta_mmr, points=self.lose_points, winner=False,
                                         map=self.map)
         elif self.type == EventTypes.unranked:
             self.delta_mmr = 0

@@ -484,6 +484,17 @@ async def fix_leagues(ctx: SamuroSlashContext) -> None:
 
 
 @hots.command
+@lightbulb.command("achievement", "Команды связанные с достижениями")
+@lightbulb.implements(lightbulb.SlashCommandGroup)
+async def hots_achievements(ctx: SamuroSlashContext) -> None:
+    pass
+
+
+@hots_achievements.child
+
+
+
+@hots.command
 @lightbulb.command("event", "Команды связанные с ивентами")
 @lightbulb.implements(lightbulb.SlashCommandGroup)
 async def hots_events(ctx: SamuroSlashContext) -> None:
