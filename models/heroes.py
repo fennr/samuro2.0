@@ -395,7 +395,7 @@ class PlayerStats(DatabaseModel):
             SELECT ua.id, a.name, ua.timestamp FROM user_achievements as ua
                     INNER JOIN achievements as a
                     ON ua.achievement = a.id
-                    WHERE ua.id = $1 AND ua.guild_id = $2 AND season = $3
+                    WHERE ua.id = $1 AND ua.guild_id = $2 AND ( season = $3 OR season = 'ALL' )
             """,
             hikari.Snowflake(user),
             hikari.Snowflake(guild),
