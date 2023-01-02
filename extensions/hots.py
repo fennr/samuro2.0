@@ -604,7 +604,7 @@ async def event_map(ctx: SamuroSlashContext) -> None:
 @lightbulb.option(name="mmr", description="Изменение ммр за матч", type=int, default=4, min_value=0, max_value=8)
 @lightbulb.option(name="players", description="Игроки", type=t.List[hikari.Member], required=True)
 @lightbulb.option(name="map", description="Карта", choices=util.maps, required=True)
-@lightbulb.option(name="type", description="Тип ивента", choices=util.event_types, default=util.event_types[0])
+@lightbulb.option(name="type", description="Тип ивента", choices=util.event_types, default=util.event_types[0], required=True)
 @lightbulb.command(name="create", description="Создать ивент", pass_options=True)
 @lightbulb.implements(lightbulb.SlashSubCommand)
 async def event_create(ctx: SamuroSlashContext, type: str, map: str, players: str,

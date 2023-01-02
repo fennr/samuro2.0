@@ -58,6 +58,7 @@ class EventTypes(str, enum.Enum):
     event5x5 = "5x5"
     event1x4 = "1x4"
     unranked = "unranked"
+    tournament = "tournament"
     manual5x5 = "5x5 manual"
 
 
@@ -71,7 +72,7 @@ class DatabaseUserFlag(enum.Flag):
 
 
 def check_type(type, members):
-    if type in [EventTypes.event5x5, EventTypes.unranked, EventTypes.manual5x5]:
+    if type in [EventTypes.event5x5, EventTypes.unranked, EventTypes.manual5x5, EventTypes.tournament]:
         if len(members) != 10:
             raise errors.BadPlayersCount
     elif type == '1x4':
@@ -918,7 +919,7 @@ class HotsEvent(DatabaseModel):
         blue = red = []
         if type == EventTypes.event5x5:
             blue, red = await matchmaking_5x5(ctx, type, players_str=players)
-        elif type in [EventTypes.unranked, EventTypes.manual5x5]:
+        elif type in [EventTypes.unranked, EventTypes.manual5x5, EventTypes.tournament]:
             blue, red = await matchmaking_5x5(ctx, type, players_str=players, manual=True)
         if len(blue) > 0 and len(red) > 0:
             event_id = await cls._db.fetchval(
@@ -1078,7 +1079,7 @@ class HotsEvent(DatabaseModel):
             for player in loser_team:
                 await player.ending_5x5(event_id=self.id, mmr=self.delta_mmr, points=self.lose_points, winner=False,
                                         map=self.map)
-        elif self.type == EventTypes.unranked:
+        elif self.type == EventTypes.unranked or self.type == EventTypes.tournament:
             self.delta_mmr = 0
             for player in winner_team:
                 await player.ending_unranked(event_id=self.id, mmr=self.delta_mmr, points=self.win_points, winner=True,
