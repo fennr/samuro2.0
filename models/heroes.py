@@ -611,10 +611,10 @@ class HotsPlayer(DatabaseModel):
             x[1][0].split(sep='.') for x in enumerate(reversed(util.flatten_mmr.items())) if x[1][1] < self.mmr)
         return league, int(division)
 
-    async def add_log(self, event_id: int, winner: bool, mmr: int, points: int, map: str):
+    async def add_log(self, event_id: int, winner: bool, mmr: int, points: int, map: str, type: str = EventTypes.event5x5):
         await self._db.execute(
             """INSERT INTO event_log (id, guild_id, event_id, winner, points, delta_mmr, map, season) 
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
             ON CONFLICT (id, guild_id, event_id, season) DO UPDATE 
             SET winner = $4, points = $5, delta_mmr = $6, season = $8 
             """,
@@ -625,7 +625,8 @@ class HotsPlayer(DatabaseModel):
             points,
             mmr,
             map,
-            self.stats.season
+            self.stats.season,
+            type
         )
 
     async def ending_5x5(self, event_id: int, mmr: int, points: int, winner: bool, map: str) -> None:
@@ -640,9 +641,9 @@ class HotsPlayer(DatabaseModel):
 
         await self.add_log(event_id=event_id, winner=winner, mmr=mmr, points=points, map=map)
 
-    async def ending_unranked(self, event_id: int, mmr: int, points: int, winner: bool, map: str) -> None:
+    async def ending_unranked(self, event_id: int, mmr: int, points: int, winner: bool, map: str, type: str) -> None:
         await self.update_stats(winner=winner, points=points)
-        await self.add_log(event_id=event_id, winner=winner, mmr=mmr, points=points, map=map)
+        await self.add_log(event_id=event_id, winner=winner, mmr=mmr, points=points, map=map, type=type)
 
     async def read_mmr(self, battletag: str) -> int:
         mmr_url = None
@@ -1083,10 +1084,10 @@ class HotsEvent(DatabaseModel):
             self.delta_mmr = 0
             for player in winner_team:
                 await player.ending_unranked(event_id=self.id, mmr=self.delta_mmr, points=self.win_points, winner=True,
-                                             map=self.map)
+                                             map=self.map, type=self.type)
             for player in loser_team:
                 await player.ending_unranked(event_id=self.id, mmr=self.delta_mmr, points=self.win_points, winner=False,
-                                             map=self.map)
+                                             map=self.map, type=self.type)
         else:
             pass  # другие типы ивентов
 
