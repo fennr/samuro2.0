@@ -1,17 +1,19 @@
 services:
 
   samuro-db:
-    image: postgres:${POSTGRES_VERSION:-14}
+    image: postgres:14
     restart: always
     expose:
-      - $POSTGRES_PORT:-5432
+      - 5433
     ports:
-      - "5432:5432"
+      - "5433:5432"
+    env_file:
+      - .env
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-samuro}
+      POSTGRES_DB: ${POSTGRES_DB:-samuro}
       POSTGRES_PORT: ${POSTGRES_PORT:-5432}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?err}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-1121}
     volumes:
      - postgres_data:/var/lib/postgresql/data
     networks:

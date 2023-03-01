@@ -258,7 +258,7 @@ class SamuroBot(lightbulb.BotApp):
         self.load_extensions_from(os.path.join(self.base_dir, "extensions"), must_exist=True)
         self.unload_extensions("extensions.help")
         #self.unload_extensions("extensions.settings")
-        #self.unload_extensions("extensions.test")
+        self.unload_extensions("extensions.test")
         #self.unload_extensions("extensions.troubleshooter")
 
     async def on_started(self, event: hikari.StartedEvent) -> None:

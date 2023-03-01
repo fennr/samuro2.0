@@ -22,3 +22,4 @@ class Config:
     OWNER: int = 196583204164075520
 
 # by fenrir#5455
+
