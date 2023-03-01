@@ -1,35 +1,26 @@
+import asyncio
 import enum
 import logging
-import re
 import typing as t
-from difflib import get_close_matches
 from datetime import datetime
+from difflib import get_close_matches
 
 import hikari
 import lightbulb
 import miru
-import psutil
-import pytz
-
-import asyncio
 
 import models
 import utils.helpers
 from etc import constants as const
 from models import SamuroBot
-from models.checks import bot_has_permissions
-from models.checks import has_permissions
-from models.checks import is_lead, is_above_target
-from models.context import SamuroMessageContext, SamuroUserContext
+from models.checks import is_lead
 from models.components import *
-from models.views import AuthorOnlyView
-from models.context import SamuroSlashContext
+from models.context import SamuroSlashContext, SamuroUserContext
+from models.heroes import HotsEvent, HotsHero, HotsPlayer, fix_league_by_mmr
 from models.plugin import SamuroPlugin
-from models.heroes import HotsHero, HotsPlayer, HotsEvent, fix_league_by_mmr
-from utils import helpers, hots as util
+from models.views import AuthorOnlyView
+from utils import hots as util
 from utils.hots import EventWinner
-from miru.abc import ViewItem
-from utils.scheduler import ConversionMode
 
 logger = logging.getLogger(__name__)
 

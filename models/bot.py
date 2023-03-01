@@ -66,6 +66,15 @@ async def is_not_blacklisted(ctx: SamuroContext) -> bool:
 
 
 class SamuroBot(lightbulb.BotApp):
+    """A customized subclass of lightbulb.BotApp
+
+    Parameters
+    ----------
+    config : Config
+        The bot configuration to initialize the bot with.
+        See the included config_example.py for formatting help.
+    """
+
     def __init__(self, config: Config) -> None:
         self._started = asyncio.Event()
         self._is_started = False
@@ -246,7 +255,7 @@ class SamuroBot(lightbulb.BotApp):
     async def on_starting(self, event: hikari.StartingEvent) -> None:
         # Connect to the database, update schema, apply pending migrations
         await self.db.connect()
-        #await self.db.update_schema()
+        await self.db.update_schema()
         # Start scheduler, DB cache
         await self.db_cache.start()
         self.scheduler.start()
@@ -257,9 +266,9 @@ class SamuroBot(lightbulb.BotApp):
         # Load all extensions
         self.load_extensions_from(os.path.join(self.base_dir, "extensions"), must_exist=True)
         self.unload_extensions("extensions.help")
-        #self.unload_extensions("extensions.settings")
-        #self.unload_extensions("extensions.test")
-        #self.unload_extensions("extensions.troubleshooter")
+        self.unload_extensions("extensions.settings")
+        self.unload_extensions("extensions.test")
+        self.unload_extensions("extensions.troubleshooter")
 
     async def on_started(self, event: hikari.StartedEvent) -> None:
 
