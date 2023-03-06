@@ -1,5 +1,6 @@
 import asyncio
 import enum
+import random
 import logging
 import typing as t
 from datetime import datetime
@@ -15,8 +16,12 @@ from etc import constants as const
 from models import SamuroBot
 from models.checks import is_lead
 from models.components import *
-from models.context import SamuroSlashContext, SamuroUserContext
-from models.heroes import HotsEvent, HotsHero, HotsPlayer, fix_league_by_mmr
+from models.context import SamuroSlashContext
+from models.context import SamuroUserContext
+from models.heroes import HotsEvent
+from models.heroes import HotsHero
+from models.heroes import HotsPlayer
+from models.heroes import fix_league_by_mmr
 from models.plugin import SamuroPlugin
 from models.views import AuthorOnlyView
 from utils import hots as util
@@ -550,10 +555,11 @@ async def event_add_log(ctx: SamuroSlashContext, event_id: int) -> None:
 
 
 @hots_events.child
+@lightbulb.option(name="rand", description="Случайный выбор", type=bool, required=True, default=False)
 @lightbulb.add_checks(is_lead)
-@lightbulb.command(name="map", description="Выбор карты")
+@lightbulb.command(name="map", description="Выбор карты", pass_options=True)
 @lightbulb.implements(lightbulb.SlashSubCommand)
-async def event_map(ctx: SamuroSlashContext) -> None:
+async def event_map(ctx: SamuroSlashContext, rand: bool) -> None:
 
     maps = '''
 0. Alterac Pass
@@ -566,26 +572,34 @@ async def event_map(ctx: SamuroSlashContext) -> None:
 7. Infernal Shrines
 8. Sky Temple
 9. Tomb of the Spider Queen
-10. Towers of Doom
-    '''
-    numbers = ['0️⃣', '1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟']
+10. Towers of Doom'''
+    if rand:
+        maps_list = maps.split("\n")
+        await ctx.respond(
+            embed=hikari.Embed(
+                title="Случайный выбор карты",
+                description=random.choice(maps_list),
+                color=const.EMBED_GREEN)
+            )
+    else:
+        numbers = ['0️⃣', '1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟']
 
-    embed = hikari.Embed(
-        title="Выбор карты",
-        description=maps,
-        color=const.EMBED_BLUE,
-    )
-    message = await ctx.app.rest.create_message(ctx.channel_id, embed=embed)
-    task = asyncio.create_task(utils.helpers.add_emoji(message, numbers))
+        embed = hikari.Embed(
+            title="Выбор карты",
+            description=maps,
+            color=const.EMBED_BLUE,
+        )
+        message = await ctx.app.rest.create_message(ctx.channel_id, embed=embed)
+        task = asyncio.create_task(utils.helpers.add_emoji(message, numbers))
 
-    await ctx.respond(
-        embed=hikari.Embed(
-            title="✅ Голосование за выбор карты создано!",
-            color=const.EMBED_GREEN),
-        flags=hikari.MessageFlag.EPHEMERAL,
-    )
+        await ctx.respond(
+            embed=hikari.Embed(
+                title="✅ Голосование за выбор карты создано!",
+                color=const.EMBED_GREEN),
+            flags=hikari.MessageFlag.EPHEMERAL,
+        )
 
-    await task
+        await task
 
 
 @hots_events.child
