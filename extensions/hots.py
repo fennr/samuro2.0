@@ -190,7 +190,7 @@ async def hero_command(ctx: SamuroSlashContext, name: str) -> None:
         embed=embed,
         components=view.build()
     )
-    view.start(await resp.message())
+    await view.start(await resp.message())
 
 
 @hots.command
@@ -223,7 +223,7 @@ async def skills_command(ctx: SamuroSlashContext, name: str, type: str) -> None:
         embed=embed,
         components=view.build()
     )
-    view.start(await resp.message())
+    await view.start(await resp.message())
 
 
 @hots.command
@@ -257,7 +257,7 @@ async def talent_command(ctx: SamuroSlashContext, name: str, level: int) -> None
         embed=embed,
         components=view.build()
     )
-    view.start(await resp.message())
+    await view.start(await resp.message())
 
 
 @hots.command
@@ -606,7 +606,7 @@ async def event_create(ctx: SamuroSlashContext, type: str, map: str, players: st
     embed = event.description()
 
     resp = await ctx.respond(embed=embed, components=view.build())
-    view.start(await resp.message())
+    await view.start(await resp.message())
 
 
 @hots_events.child
