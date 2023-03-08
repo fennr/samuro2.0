@@ -1,26 +1,20 @@
-import attr
 import enum
 import logging
 from datetime import datetime
-import typing as t
-import itertools as it
-from bs4 import BeautifulSoup
-import requests
-
-import hikari
 from difflib import get_close_matches
 
+import attr
+import hikari
 import lightbulb.utils
-
-from models import errors
-from models.db import DatabaseModel
-from models.context import SamuroSlashContext
-
-from utils import hots as util
-
-from utils.hots import EventWinner
+import requests
+from bs4 import BeautifulSoup
 
 from etc import constants as const
+from models import errors
+from models.context import SamuroSlashContext
+from models.db import DatabaseModel
+from utils import hots as util
+from utils.hots import EventWinner
 
 # TODO при переносе на сервер не забыть начать ивенты с 411
 # SELECT setval('event_history_event_id_seq', 411, true)
@@ -96,7 +90,6 @@ async def fix_league_by_mmr(ctx: SamuroSlashContext):
     for record in records:
         guild_id = int(record.get("guild_id"))
         member_id = int(record.get('id'))
-        member = hikari.Member
         player = await HotsPlayer.fetch(member_id, guild_id)
         await player.update()
 
@@ -548,7 +541,7 @@ class HotsPlayer(DatabaseModel):
             else:
                 wrong += 1
         if correct > 0 and wrong > 0:
-            rate = round(correct / (correct + wrong) * 100)
+            round(correct / (correct + wrong) * 100)
             embed.add_field(
                 name="Ставки",
                 value=f"""• Верных: `{correct or "-"}`  
@@ -710,10 +703,10 @@ class HotsPlayer(DatabaseModel):
             lose_versus = 0
             for record in records:
                 values = list(record.values())
-                a_id = values[0]
+                values[0]
                 a_winner = values[1]
-                event_id = values[2]
-                b_id = values[3]
+                values[2]
+                values[3]
                 b_winner = values[4]
                 if a_winner and b_winner:
                     win_together += 1
@@ -752,7 +745,7 @@ class HotsPlayer(DatabaseModel):
             battletag
         )
         if record:
-            logger.warning(f"Профиль уже создан")
+            logger.warning("Профиль уже создан")
             raise errors.HasProfile
 
         profile = cls(
@@ -971,8 +964,8 @@ class HotsEvent(DatabaseModel):
         await self._db.execute("""DELETE FROM event_history WHERE event_id = $1""", record.get("event_id"))
 
         return hikari.Embed(
-            title=f"Матч отменен",
-            description=f"Можно пересоздать команды",
+            title="Матч отменен",
+            description="Можно пересоздать команды",
             color=const.EMBED_GREEN
         )
 

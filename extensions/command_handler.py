@@ -9,14 +9,13 @@ import typing as t
 import hikari
 import lightbulb
 
-import models.errors
 from etc import constants as const
 from etc.perms_str import get_perm_str
 from models import SamuroContext
+from models import errors
 from models.bot import SamuroBot
 from models.context import SamuroPrefixContext
 from models.context import SamuroSlashContext
-from models import errors
 from models.errors import BotRoleHierarchyError
 from models.errors import MemberExpectedError
 from models.errors import RoleHierarchyError
@@ -58,7 +57,7 @@ async def log_exc_to_channel(
             f"Ignoring exception in listener for {event.failed_event.__class__.__name__}, callback {event.failed_callback.__name__}:\n"
         )
     else:
-        paginator.add_line(f"Uncaught exception:")
+        paginator.add_line("Uncaught exception:")
 
     for line in error_lines:
         paginator.add_line(line)
@@ -96,7 +95,7 @@ async def application_error_handler(ctx: SamuroContext, error: BaseException) ->
         await ctx.respond(
             embed=hikari.Embed(
                 title="❌ Недостаточно прав",
-                description=f"Необходимо иметь определенную роль для доступа к данной команде",
+                description="Необходимо иметь определенную роль для доступа к данной команде",
                 color=const.ERROR_COLOR,
             ),
             flags=hikari.MessageFlag.EPHEMERAL,
@@ -140,7 +139,7 @@ async def application_error_handler(ctx: SamuroContext, error: BaseException) ->
         await ctx.respond(
             embed=hikari.Embed(
                 title="❌ Максимальное количество инстанций",
-                description=f"Вы достигли максимального количества запущенных экземпляров для этой команды. Пожалуйста, попробуйте позже",
+                description="Вы достигли максимального количества запущенных экземпляров для этой команды. Пожалуйста, попробуйте позже",
                 color=const.ERROR_COLOR,
             ),
             flags=hikari.MessageFlag.EPHEMERAL,
@@ -151,7 +150,7 @@ async def application_error_handler(ctx: SamuroContext, error: BaseException) ->
         await ctx.respond(
             embed=hikari.Embed(
                 title="❌ Ошибка иерархии ролей",
-                description=f"Самая высокая роль целевого пользователя выше роли бота",
+                description="Самая высокая роль целевого пользователя выше роли бота",
                 color=const.ERROR_COLOR,
             ),
             flags=hikari.MessageFlag.EPHEMERAL,
@@ -162,7 +161,7 @@ async def application_error_handler(ctx: SamuroContext, error: BaseException) ->
         await ctx.respond(
             embed=hikari.Embed(
                 title="❌ Ошибка иерархии ролей",
-                description=f"Самая высокая роль целевого пользователя выше вашей максимальной роли",
+                description="Самая высокая роль целевого пользователя выше вашей максимальной роли",
                 color=const.ERROR_COLOR,
             ),
             flags=hikari.MessageFlag.EPHEMERAL,
@@ -173,7 +172,7 @@ async def application_error_handler(ctx: SamuroContext, error: BaseException) ->
         await ctx.respond(
             embed=hikari.Embed(
                 title="❌ Недостаточно прав",
-                description=f"Убедитесь что у вас есть необходимая роль для использования команды",
+                description="Убедитесь что у вас есть необходимая роль для использования команды",
                 color=const.ERROR_COLOR,
             ),
             flags=hikari.MessageFlag.EPHEMERAL,
@@ -197,7 +196,7 @@ async def application_error_handler(ctx: SamuroContext, error: BaseException) ->
             await ctx.respond(
                 embed=hikari.Embed(
                     title="❌ Герой не найден",
-                    description=f"Убедитесь что в поле `name` герой выбран из автодополнения",
+                    description="Убедитесь что в поле `name` герой выбран из автодополнения",
                     color=const.ERROR_COLOR,
                 ),
                 flags=hikari.MessageFlag.EPHEMERAL,
@@ -219,7 +218,7 @@ async def application_error_handler(ctx: SamuroContext, error: BaseException) ->
             await ctx.respond(
                 embed=hikari.Embed(
                     title="❌ В базе уже есть этот профиль",
-                    description=f"Используйте команду `/profile show`",
+                    description="Используйте команду `/profile show`",
                     color=const.ERROR_COLOR,
                 ),
                 flags=hikari.MessageFlag.EPHEMERAL,
@@ -230,7 +229,7 @@ async def application_error_handler(ctx: SamuroContext, error: BaseException) ->
             await ctx.respond(
                 embed=hikari.Embed(
                     title="❌ Не найдено события",
-                    description=f"На данном сервере нет события с таким id\n Посмотреть ивенты можно командой `/event list`",
+                    description="На данном сервере нет события с таким id\n Посмотреть ивенты можно командой `/event list`",
                     color=const.ERROR_COLOR,
                 ),
                 flags=hikari.MessageFlag.EPHEMERAL,
@@ -241,8 +240,8 @@ async def application_error_handler(ctx: SamuroContext, error: BaseException) ->
             await ctx.respond(
                 embed=hikari.Embed(
                     title="❌ Нет игр в штормовой лиге",
-                    description=f"На сайте `heroesprofile.com` не найдены игры в лиге.\n"
-                                f"Пожалуйста загрузите реплеи на сайт и повторите попытку",
+                    description="На сайте `heroesprofile.com` не найдены игры в лиге.\n"
+                                "Пожалуйста загрузите реплеи на сайт и повторите попытку",
                     color=const.ERROR_COLOR,
                 ),
                 flags=hikari.MessageFlag.EPHEMERAL,
@@ -253,7 +252,7 @@ async def application_error_handler(ctx: SamuroContext, error: BaseException) ->
             await ctx.respond(
                 embed=hikari.Embed(
                     title="❌ История матчей пуста",
-                    description=f"Пока не сыграно ни одного матча на сервере.",
+                    description="Пока не сыграно ни одного матча на сервере.",
                     color=const.ERROR_COLOR,
                 ),
                 flags=hikari.MessageFlag.EPHEMERAL,
@@ -264,7 +263,7 @@ async def application_error_handler(ctx: SamuroContext, error: BaseException) ->
             await ctx.respond(
                 embed=hikari.Embed(
                     title="❌ Неверное число игроков",
-                    description=f"Для данного режима нужно другое количество игроков",
+                    description="Для данного режима нужно другое количество игроков",
                     color=const.ERROR_COLOR,
                 ),
                 flags=hikari.MessageFlag.EPHEMERAL,
@@ -275,7 +274,7 @@ async def application_error_handler(ctx: SamuroContext, error: BaseException) ->
             await ctx.respond(
                 embed=hikari.Embed(
                     title="❌ Есть активное событие",
-                    description=f"Завершите запущенное событие в данной комнате командой `/event end`",
+                    description="Завершите запущенное событие в данной комнате командой `/event end`",
                     color=const.ERROR_COLOR,
                 ),
                 flags=hikari.MessageFlag.EPHEMERAL,
@@ -286,7 +285,7 @@ async def application_error_handler(ctx: SamuroContext, error: BaseException) ->
             await ctx.respond(
                 embed=hikari.Embed(
                     title="❌ Нет активных событий",
-                    description=f"Запустите новое событие в данной комнате командой `/event create`",
+                    description="Запустите новое событие в данной комнате командой `/event create`",
                     color=const.ERROR_COLOR,
                 ),
                 flags=hikari.MessageFlag.EPHEMERAL,
@@ -297,7 +296,7 @@ async def application_error_handler(ctx: SamuroContext, error: BaseException) ->
             await ctx.respond(
                 embed=hikari.Embed(
                     title="❌ Время действия истекло",
-                    description=f"Время ожидания команды истекло",
+                    description="Время ожидания команды истекло",
                     color=const.ERROR_COLOR,
                 ),
                 flags=hikari.MessageFlag.EPHEMERAL,
@@ -330,7 +329,7 @@ async def application_error_handler(ctx: SamuroContext, error: BaseException) ->
             await ctx.respond(
                 embed=hikari.Embed(
                     title="❌ Ошибка иерархии ролей",
-                    description=f"Не удалось выполнить это действие из-за попытки изменить пользователя с ролью выше или равной вашей самой высокой роли",
+                    description="Не удалось выполнить это действие из-за попытки изменить пользователя с ролью выше или равной вашей самой высокой роли",
                     color=const.ERROR_COLOR,
                 ),
                 flags=hikari.MessageFlag.EPHEMERAL,
@@ -341,7 +340,7 @@ async def application_error_handler(ctx: SamuroContext, error: BaseException) ->
             await ctx.respond(
                 embed=hikari.Embed(
                     title="❌ Ошибка иерархии ролей",
-                    description=f"Не удалось выполнить это действие из-за попытки изменить роль пользователя с ролью выше роли бота",
+                    description="Не удалось выполнить это действие из-за попытки изменить роль пользователя с ролью выше роли бота",
                     color=const.ERROR_COLOR,
                 ),
                 flags=hikari.MessageFlag.EPHEMERAL,
@@ -352,7 +351,7 @@ async def application_error_handler(ctx: SamuroContext, error: BaseException) ->
             await ctx.respond(
                 embed=hikari.Embed(
                     title="❌ Ожидается Member",
-                    description=f"Ожидается пользователь, который является членом этого сервера",
+                    description="Ожидается пользователь, который является членом этого сервера",
                     color=const.ERROR_COLOR,
                 ),
                 flags=hikari.MessageFlag.EPHEMERAL,

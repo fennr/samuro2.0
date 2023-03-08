@@ -9,8 +9,8 @@ import attr
 import hikari
 import lightbulb
 import miru
-#from miru.abc import ViewItem
 
+#from miru.abc import ViewItem
 from etc import constants as const
 from models.db_user import DatabaseUser
 from models.db_user import DatabaseUserFlag
@@ -126,7 +126,7 @@ class ModActions:
             try:
                 await target.send(
                     embed=hikari.Embed(
-                        title=f"❗ **Внимание**",
+                        title="❗ **Внимание**",
                         description=f"{types_conj[action_type]} **{guild_name}**.\n**Причина:** ```{reason}```",
                         color=const.ERROR_COLOR,
                     )
@@ -522,7 +522,7 @@ class ModActions:
         if db_user.warns <= 0:
             return hikari.Embed(
                 title="❌ Нет предупреждений",
-                description=f"У этого пользователя нет предупреждений",
+                description="У этого пользователя нет предупреждений",
                 color=const.ERROR_COLOR,
             )
 

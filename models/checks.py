@@ -4,11 +4,11 @@ import operator
 import hikari
 import lightbulb
 
+from config import Config
 from models.context import SamuroContext
 from models.errors import BotRoleHierarchyError
 from models.errors import RoleHierarchyError
 from utils import helpers
-from config import Config
 
 config = Config()
 

@@ -200,7 +200,7 @@ async def eval_py(ctx: SamuroPrefixContext, code: str) -> None:
         code_split[-1] = f"return {code_split[-1]}"
         code = "\n".join(code_split)
 
-    code_func = f"async def _container():\n" + textwrap.indent(code, "   ")
+    code_func = "async def _container():\n" + textwrap.indent(code, "   ")
 
     async with ctx.app.rest.trigger_typing(ctx.channel_id):
         try:
@@ -278,7 +278,7 @@ async def run_sql(ctx: SamuroPrefixContext) -> None:
         await ctx.respond(
             embed=hikari.Embed(
                 title="❌ No valid attachment",
-                description=f"Expected a singular `.sql` file as attachment with `UTF-8` encoding!",
+                description="Expected a singular `.sql` file as attachment with `UTF-8` encoding!",
                 color=const.ERROR_COLOR,
             )
         )
@@ -295,7 +295,7 @@ async def run_sql(ctx: SamuroPrefixContext) -> None:
 @lightbulb.command("shutdown", "Shut down the bot.")
 @lightbulb.implements(lightbulb.PrefixCommand)
 async def shutdown_cmd(ctx: SamuroPrefixContext) -> None:
-    confirm_payload = {"content": f"⚠️ Отключается...", "components": []}
+    confirm_payload = {"content": "⚠️ Отключается...", "components": []}
     cancel_payload = {"content": "❌ Отключение преостановлено", "components": []}
     confirmed = await ctx.confirm(
         "Вы действительно хотите отключить бота?",
@@ -326,7 +326,7 @@ async def restore_db(ctx: SamuroPrefixContext) -> None:
         await ctx.respond(
             embed=hikari.Embed(
                 title="❌ No valid attachment",
-                description=f"Required dump-file attachment not found. Expected a `.pgdmp` file.",
+                description="Required dump-file attachment not found. Expected a `.pgdmp` file.",
                 color=const.ERROR_COLOR,
             )
         )

@@ -9,9 +9,6 @@ import miru
 import psutil
 import pytz
 
-import asyncio
-
-import utils.helpers
 from etc import constants as const
 from models import SamuroBot
 from models.checks import bot_has_permissions
@@ -91,7 +88,7 @@ async def embed(ctx: SamuroSlashContext) -> None:
             await ctx.respond(
                 embed=hikari.Embed(
                     title="❌ Некорректный URL",
-                    description=f"Указан неверный URL.",
+                    description="Указан неверный URL.",
                     color=const.ERROR_COLOR,
                 ),
                 flags=hikari.MessageFlag.EPHEMERAL,
@@ -102,7 +99,7 @@ async def embed(ctx: SamuroSlashContext) -> None:
         await ctx.respond(
             embed=hikari.Embed(
                 title="❌ Некорректный цвет",
-                description=f"Цвет должен быть в формате `RRR GGG BBB`, три значения разделенные пробелами",
+                description="Цвет должен быть в формате `RRR GGG BBB`, три значения разделенные пробелами",
                 color=const.ERROR_COLOR,
             ),
             flags=hikari.MessageFlag.EPHEMERAL,
@@ -135,7 +132,7 @@ async def embed(ctx: SamuroSlashContext) -> None:
         await ctx.respond(
             embed=hikari.Embed(
                 title="❌ Отсутствуют права доступа",
-                description=f"Необходимо иметь роль с правами на `Send Messages`",
+                description="Необходимо иметь роль с правами на `Send Messages`",
                 color=const.ERROR_COLOR,
             ),
             flags=hikari.MessageFlag.EPHEMERAL,
@@ -243,7 +240,7 @@ async def invite(ctx: SamuroSlashContext) -> None:
         await ctx.respond(
             embed=hikari.Embed(
                 title="🌟 Oops!",
-                description=f"Похоже бот не предназначен для приглашения!",
+                description="Похоже бот не предназначен для приглашения!",
                 color=const.MISC_COLOR,
             )
         )
@@ -288,7 +285,7 @@ async def serverinfo(ctx: SamuroSlashContext) -> None:
 
     embed = (
         hikari.Embed(
-            title=f"ℹ️ Server Information",
+            title="ℹ️ Server Information",
             description=f"""**• Name:** `{guild.name}`
 **• ID:** `{guild.id}`
 **• Создатель:** `{ctx.app.cache.get_member(guild.id, guild.owner_id)}` (`{guild.owner_id}`)
@@ -416,7 +413,7 @@ async def edit(ctx: SamuroSlashContext, message_link: str) -> None:
         )
         return
 
-    modal = miru.Modal(f"Редактирование сообщения")
+    modal = miru.Modal("Редактирование сообщения")
     modal.add_item(
         miru.TextInput(
             label="Контент",

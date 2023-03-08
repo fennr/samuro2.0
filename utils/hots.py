@@ -1,12 +1,6 @@
 import enum
-import json
-import re
 import itertools as it
-
-import hikari
-
-from models import errors
-from models.context import SamuroSlashContext
+import re
 
 from etc import constants as const
 

@@ -42,7 +42,7 @@ build-backend = "poetry.core.masonry.api"
 
 
 [tool.ruff]
-line-length = 88
+line-length = 120
 
 # Enable Pyflakes `E` and `F` codes by default.
 select = ["E", "F", "I"]

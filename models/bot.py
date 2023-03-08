@@ -329,7 +329,7 @@ class SamuroBot(lightbulb.BotApp):
                 )
                 return
 
-            elif not event.content in await get_prefix(self, event.message) and event.content.startswith(
+            elif event.content not in await get_prefix(self, event.message) and event.content.startswith(
                 await get_prefix(self, event.message)
             ):
                 user = self.get_me()

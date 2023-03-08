@@ -1,4 +1,3 @@
-import json
 
 import hikari
 import miru

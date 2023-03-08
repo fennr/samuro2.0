@@ -17,8 +17,6 @@ from models.context import SamuroContext
 from models.context import SamuroSlashContext
 from models.db_user import DatabaseUser
 
-import Levenshtein as lev
-
 MESSAGE_LINK_REGEX = re.compile(
     r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)channels[\/][0-9]{1,}[\/][0-9]{1,}[\/][0-9]{1,}"
 )
