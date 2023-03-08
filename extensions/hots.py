@@ -512,6 +512,36 @@ async def get_event(ctx: SamuroSlashContext, event_id: int) -> None:
 
 
 @hots_events.child
+@lightbulb.option(name="room", description="Комната с игроками", type=hikari.GuildVoiceChannel)
+@lightbulb.command(name="captains", description="Выбрать случайных капитанов", pass_options=True)
+@lightbulb.implements(lightbulb.SlashSubCommand)
+async def event_capitans(ctx: SamuroSlashContext, room: hikari.GuildVoiceChannel) -> None:
+    members = [member for member in ctx.app.cache.get_voice_states_view_for_channel(ctx.guild_id, room.id)]
+    if len(members) > 1:
+        blue, red = random.sample(members, k=2)
+        message = f"{const.EMOJI_BLUE} {ctx.app.cache.get_member(ctx.guild_id, blue).mention}\n" \
+                f"{const.EMOJI_RED} {ctx.app.cache.get_member(ctx.guild_id, red).mention}"
+        await ctx.respond(
+            embed = hikari.Embed(
+                    title="Случайный выбор капитанов",
+                    description=message,
+                    color=const.MISC_COLOR,
+            ),
+        )
+    else:
+        await ctx.respond(
+            embed = hikari.Embed(
+                    title="Ошибка",
+                    description="В комнате должно быть хотя бы 2 человека",
+                    color=const.ERROR_COLOR,
+            ),
+            flags=hikari.MessageFlag.EPHEMERAL
+        )
+
+
+
+
+@hots_events.child
 @lightbulb.command(name="list", description="Список всех ивентов")
 @lightbulb.implements(lightbulb.SlashSubCommand)
 async def event_list(ctx: SamuroSlashContext) -> None:
