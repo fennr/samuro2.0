@@ -606,10 +606,10 @@ class HotsPlayer(DatabaseModel):
 
     async def add_log(self, event_id: int, winner: bool, mmr: int, points: int, map: str, type: str = EventTypes.event5x5):
         await self._db.execute(
-            """INSERT INTO event_log (id, guild_id, event_id, winner, points, delta_mmr, map, season) 
+            """INSERT INTO event_log (id, guild_id, event_id, winner, points, delta_mmr, map, season, type) 
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
             ON CONFLICT (id, guild_id, event_id, season) DO UPDATE 
-            SET winner = $4, points = $5, delta_mmr = $6, season = $8 
+            SET winner = $4, points = $5, delta_mmr = $6, season = $8, type = $9
             """,
             self.id,
             self.stats.guild_id,
