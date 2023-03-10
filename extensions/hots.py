@@ -195,7 +195,7 @@ async def hero_command(ctx: SamuroSlashContext, name: str) -> None:
         embed=embed,
         components=view.build()
     )
-    await view.start(await resp.message())
+    view.start(await resp.message())
 
 
 @hots.command
@@ -228,7 +228,7 @@ async def skills_command(ctx: SamuroSlashContext, name: str, type: str) -> None:
         embed=embed,
         components=view.build()
     )
-    await view.start(await resp.message())
+    view.start(await resp.message())
 
 
 @hots.command
@@ -262,7 +262,7 @@ async def talent_command(ctx: SamuroSlashContext, name: str, level: int) -> None
         embed=embed,
         components=view.build()
     )
-    await view.start(await resp.message())
+    view.start(await resp.message())
 
 
 @hots.command
@@ -516,7 +516,7 @@ async def get_event(ctx: SamuroSlashContext, event_id: int) -> None:
 @lightbulb.command(name="captains", description="Выбрать случайных капитанов", pass_options=True)
 @lightbulb.implements(lightbulb.SlashSubCommand)
 async def event_capitans(ctx: SamuroSlashContext, room: hikari.GuildVoiceChannel) -> None:
-    members = [member for member in ctx.app.cache.get_voice_states_view_for_channel(ctx.guild_id, room.id)]
+    members = [member for member in ctx.bot.cache.get_voice_states_view_for_channel(ctx.guild_id, room.id)]
     if len(members) > 1:
         blue, red = random.sample(members, k=2)
         message = f"{const.EMOJI_BLUE} {ctx.app.cache.get_member(ctx.guild_id, blue).mention}\n" \
@@ -650,7 +650,7 @@ async def event_create(ctx: SamuroSlashContext, type: str, map: str, players: st
     embed = event.description()
 
     resp = await ctx.respond(embed=embed, components=view.build())
-    await view.start(await resp.message())
+    view.start(await resp.message())
 
 
 @hots_events.child
