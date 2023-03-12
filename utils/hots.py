@@ -33,8 +33,8 @@ maps = ["Alterac Pass", "Battlefield Of Eternity", "Blackheart's Bay", "Braxis H
 maps_url = "https://nexuscompendium.com/images/battlegrounds/"  # + main.jpg
 
 
-def players_parse(players):
-    players_list = players.split(' ')
+def players_parse(players: str) -> list[int]:
+    players_list = players.replace('  ', ' ').split(' ')
     return [int(''.join(filter(str.isdigit, x))) for x in players_list]
 
 
