@@ -592,17 +592,17 @@ async def event_add_log(ctx: SamuroSlashContext, event_id: int) -> None:
 async def event_map(ctx: SamuroSlashContext, rand: bool) -> None:
 
     maps = '''
-0. Alterac Pass
-1. Battlefield Of Eternity
-2. Braxis Holdout
-3. Cursed Hollow
-4. Dragon Shire
-5. Garden of Terror
-6. Hanamura Temple
-7. Infernal Shrines
-8. Sky Temple
-9. Tomb of the Spider Queen
-10. Towers of Doom'''
+0. Альтеракский перевал
+1. Вечная битва
+2. Бойня на Браксисе
+3. Проклятая лощина
+4. Драконий край
+5. Сад ужасов
+6. Храм Ханамуры
+7. Осквернённые святилища
+8. Небесный храм
+9. Гробница Королевы Пауков
+10. Башни Рока'''
     if rand:
         maps_list = maps.split("\n")
         await ctx.respond(
