@@ -612,12 +612,12 @@ async def event_map(ctx: SamuroSlashContext, rand: bool) -> None:
                 color=const.EMBED_GREEN)
             )
     else:
-        numbers = ['<:AlteracPass: 1088157950008377465 >', '<:BattlefieldOfEternity: 1088157948355813387 >',
-                   '<:BraxisOutpost: 1088157956400500796 >', '<:CursedHollow: 1088157952726278175 >',
-                   '<:DragonShire: 1088157955028959322 >', '<:GardenOfTerror: 1088157970057138256 >',
-                   '<:HanamuraTemple: 1088157957872693398 >', '<:InfernalShrines: 1088157961320403104 >',
-                   '<:SkyTemple: 1088157962637430805 >', '<:TombOfTheSpiderQueen: 1088157965254672526 >',
-                   '<:TowersOfDoom: 1088157968555585667 >']
+        numbers = ['<:AlteracPass:1088157950008377465>', '<:BattlefieldOfEternity:1088157948355813387>',
+                   '<:BraxisOutpost:1088157956400500796>', '<:CursedHollow:1088157952726278175>',
+                   '<:DragonShire:1088157955028959322>', '<:GardenOfTerror:1088157970057138256>',
+                   '<:HanamuraTemple:1088157957872693398>', '<:InfernalShrines:1088157961320403104>',
+                   '<:SkyTemple:1088157962637430805>', '<:TombOfTheSpiderQueen:1088157965254672526>',
+                   '<:TowersOfDoom:1088157968555585667>']
 
         embed = hikari.Embed(
             title="Выбор карты",
@@ -625,7 +625,7 @@ async def event_map(ctx: SamuroSlashContext, rand: bool) -> None:
             color=const.EMBED_BLUE,
         )
         message = await ctx.app.rest.create_message(ctx.channel_id, embed=embed)
-        task = asyncio.create_task(utils.helpers.add_emoji(message, numbers))
+        task = asyncio.create_task(utils.helpers.add_emoji(message, numbers, custom=True))
 
         await ctx.respond(
             embed=hikari.Embed(
