@@ -12,14 +12,9 @@ import miru
 
 #from miru.abc import ViewItem
 from etc import constants as const
-from models.db_user import DatabaseUser
-from models.db_user import DatabaseUserFlag
-from models.errors import DMFailedError
-from models.errors import RoleHierarchyError
-from models.events import TimerCompleteEvent
-from models.events import WarnCreateEvent
-from models.events import WarnRemoveEvent
-from models.events import WarnsClearEvent
+from models.db_user import DatabaseUser, DatabaseUserFlag
+from models.errors import DMFailedError, RoleHierarchyError
+from models.events import TimerCompleteEvent, WarnCreateEvent, WarnRemoveEvent, WarnsClearEvent
 from models.timer import TimerEvent
 from models.views import AuthorOnlyNavigator
 from utils import helpers

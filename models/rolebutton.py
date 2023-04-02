@@ -7,9 +7,7 @@ import hikari
 import miru
 
 from models.db import DatabaseModel
-from models.events import RoleButtonCreateEvent
-from models.events import RoleButtonDeleteEvent
-from models.events import RoleButtonUpdateEvent
+from models.events import RoleButtonCreateEvent, RoleButtonDeleteEvent, RoleButtonUpdateEvent
 
 
 class RoleButtonMode(enum.IntEnum):

@@ -11,15 +11,10 @@ import lightbulb
 
 from etc import constants as const
 from etc.perms_str import get_perm_str
-from models import SamuroContext
-from models import errors
+from models import SamuroContext, errors
 from models.bot import SamuroBot
-from models.context import SamuroPrefixContext
-from models.context import SamuroSlashContext
-from models.errors import BotRoleHierarchyError
-from models.errors import MemberExpectedError
-from models.errors import RoleHierarchyError
-from models.errors import UserBlacklistedError
+from models.context import SamuroPrefixContext, SamuroSlashContext
+from models.errors import BotRoleHierarchyError, MemberExpectedError, RoleHierarchyError, UserBlacklistedError
 from models.plugin import SamuroPlugin
 from utils import helpers
 

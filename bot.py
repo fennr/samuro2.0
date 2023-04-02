@@ -1,15 +1,12 @@
 import platform
-from os import environ
-from os import listdir
-from os import name
+from os import environ, listdir, name
 
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 from src import logutil
 
-from config import DEBUG
-from config import DEV_GUILD
+from config import DEBUG, DEV_GUILD
 
 load_dotenv()
 

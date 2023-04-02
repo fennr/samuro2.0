@@ -39,6 +39,8 @@ f_time = "%Y-%m-%d %H:%M:%S"
 
 
 class HeroLeagues(str, enum.Enum):
+    """Enum возможных лиг"""
+
     BRONZE = "Бронза"
     SILVER = "Серебро"
     GOLD = "Золото"
@@ -49,6 +51,7 @@ class HeroLeagues(str, enum.Enum):
 
 
 class EventTypes(str, enum.Enum):
+    """Enum типов эвентов"""
     event5x5 = "5x5"
     event1x4 = "1x4"
     unranked = "unranked"
@@ -66,6 +69,7 @@ class DatabaseUserFlag(enum.Flag):
 
 
 def check_type(type, members):
+    """Проверка типа ивента на количество игроков"""
     if type in [EventTypes.event5x5, EventTypes.unranked, EventTypes.manual5x5, EventTypes.tournament]:
         if len(members) != 10:
             raise errors.BadPlayersCount
@@ -82,6 +86,7 @@ def sort_by_mmr(player):
 
 
 async def fix_league_by_mmr(ctx: SamuroSlashContext):
+    """Редактирование лиги игрока на основе ММР"""
     records = await ctx.app.db.fetch(
         """
         SELECT * FROM players
@@ -96,6 +101,8 @@ async def fix_league_by_mmr(ctx: SamuroSlashContext):
 
 
 async def matchmaking_5x5(ctx: SamuroSlashContext, type: str, players_str: str, manual:bool = False):
+    """Подбор 5х5"""
+
     players_id = util.players_parse(players_str)
     players = []
     unique_mmr = []
@@ -128,6 +135,8 @@ async def matchmaking_5x5(ctx: SamuroSlashContext, type: str, players_str: str, 
 
 
 async def _has_active_event(ctx: SamuroSlashContext):
+    """Проверка наличия активного события в комнате"""
+
     record = await ctx.app.db.fetchrow(
         """SELECT * FROM event_history WHERE guild_id = $1 AND room_id = $2 AND active = $3""",
         ctx.guild_id, ctx.channel_id, True
@@ -139,6 +148,8 @@ async def _has_active_event(ctx: SamuroSlashContext):
 
 
 class HotsHero:
+    """Класс игрового героя"""
+
     def __init__(self, name: str):
         flag = False
         heroes_ru_list = const.ru_heroesdata
@@ -279,6 +290,8 @@ class HotsHero:
 
 
 class HotsAbility:
+    """Класс способности героя"""
+
     def __init__(self, ability: dict):
         self._nameId = ability["nameId"]
         self._buttonId = ability["buttonId"]
@@ -299,6 +312,8 @@ class HotsAbility:
 
 
 class HotsTalent:
+    """Класс таланта героя"""
+
     def __init__(self, talent: dict):
         self._nameId = talent["nameId"]
         self._buttonId = talent["buttonId"]
@@ -310,6 +325,8 @@ class HotsTalent:
 
 @attr.define
 class PlayerStats(DatabaseModel):
+    """Класс статистики игрока"""
+
     id: hikari.Snowflake
     guild_id: hikari.Snowflake
     battle_tag: str
@@ -411,6 +428,8 @@ class PlayerStats(DatabaseModel):
 
 @attr.define()
 class HotsPlayer(DatabaseModel):
+    """Класс игрока"""
+
     member: hikari.Member
     id: hikari.Snowflake
     guild_id: hikari.Snowflake
@@ -867,6 +886,8 @@ class HotsPlayer(DatabaseModel):
 
 @attr.define()
 class HotsEvent(DatabaseModel):
+    """Класс проводимого события"""
+
     id: int
     time: datetime
     ftime: str

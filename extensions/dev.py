@@ -13,8 +13,7 @@ import miru
 from miru.ext import nav
 
 from etc import constants as const
-from models import AuthorOnlyNavigator
-from models import SamuroPrefixContext
+from models import AuthorOnlyNavigator, SamuroPrefixContext
 from models.bot import SamuroBot
 from models.plugin import SamuroPlugin
 from models.views import AuthorOnlyView

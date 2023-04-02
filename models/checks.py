@@ -6,8 +6,7 @@ import lightbulb
 
 from config import Config
 from models.context import SamuroContext
-from models.errors import BotRoleHierarchyError
-from models.errors import RoleHierarchyError
+from models.errors import BotRoleHierarchyError, RoleHierarchyError
 from utils import helpers
 
 config = Config()

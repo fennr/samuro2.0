@@ -3,9 +3,7 @@ from __future__ import annotations
 import datetime
 import re
 import unicodedata
-from typing import List
-from typing import Optional
-from typing import Sequence
+from typing import List, Optional, Sequence
 
 import hikari
 import lightbulb
@@ -13,8 +11,7 @@ import lightbulb
 from etc import constants as const
 from models import errors
 from models.components import *
-from models.context import SamuroContext
-from models.context import SamuroSlashContext
+from models.context import SamuroContext, SamuroSlashContext
 from models.db_user import DatabaseUser
 
 MESSAGE_LINK_REGEX = re.compile(
