@@ -757,7 +757,7 @@ class HotsPlayer(DatabaseModel):
 
 
     @classmethod
-    async def add(cls, member: hikari.Member, battletag: str):
+    async def add(cls, member: hikari.Member, battletag: str, mmr: int):
         record = await cls._db.fetchrow(
             """SELECT * FROM players WHERE id = $1 OR btag = $2""",
             member.id,
@@ -775,7 +775,7 @@ class HotsPlayer(DatabaseModel):
             battle_tag=battletag,
         )
 
-        profile.mmr = await profile.read_mmr(battletag=battletag)
+        profile.mmr = mmr
         profile.league, profile.division = profile.get_league_division()
 
         await cls._db.execute(

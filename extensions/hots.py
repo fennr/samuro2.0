@@ -459,15 +459,24 @@ async def profile_update(ctx: SamuroSlashContext) -> None:
 
 
 @hots_profile.child
+@lightbulb.add_checks(is_lead)
+@lightbulb.option(
+    'mmr',
+    'MMР игрока',
+    type=int,
+    required=True,
+    min_value=2200,
+    max_value=3200,
+)
 @lightbulb.option('battletag', 'Батлтег игрока', type=str, required=True)
 @lightbulb.option('member', 'Пользователь', type=hikari.Member, required=True)
 @lightbulb.command('add', 'Добавить профиль в базу', pass_options=True)
 @lightbulb.implements(lightbulb.SlashSubCommand)
 async def get_profile(
-    ctx: SamuroSlashContext, member: hikari.Member, battletag: str
+    ctx: SamuroSlashContext, member: hikari.Member, battletag: str, mmr: int
 ) -> None:
     await ctx.respond(hikari.ResponseType.DEFERRED_MESSAGE_CREATE)
-    user = await HotsPlayer.add(member=member, battletag=battletag)
+    user = await HotsPlayer.add(member=member, battletag=battletag, mmr=mmr)
     await ctx.respond(embed=await user.profile())
 
 
