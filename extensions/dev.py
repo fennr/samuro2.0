@@ -85,7 +85,7 @@ async def send_paginated(
             message = await ctx.app.rest.create_message(
                 channel_id, f"{prefix}{format_output(text)}{suffix}", components=view.build()
             )
-            return view.start(message)
+            return await view.start(message)
         else:
             assert isinstance(messageable, (hikari.TextableChannel, hikari.User))
             await messageable.send(f"{prefix}{format_output(text)}{suffix}")

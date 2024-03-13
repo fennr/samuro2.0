@@ -97,7 +97,7 @@ class SamuroContext(lightbulb.Context):
             message = await resp.message()
 
         assert message is not None
-        view.start(message)
+        await view.start(message)
         await view.wait()
         return view.value
 

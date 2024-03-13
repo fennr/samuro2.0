@@ -462,7 +462,7 @@ async def profile_update(ctx: SamuroSlashContext) -> None:
 @lightbulb.add_checks(is_lead)
 @lightbulb.option(
     'mmr',
-    'MMР игрока',
+    'mmr игрока',
     type=int,
     required=True,
     min_value=2200,
@@ -790,7 +790,7 @@ async def event_create(
     embed = event.description()
 
     resp = await ctx.respond(embed=embed, components=view.build())
-    view.start(await resp.message())
+    await view.start(await resp.message())
 
 
 @hots_events.child
