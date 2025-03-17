@@ -15,7 +15,7 @@ authors = ["Fenrir <fenrir1121@gmail.com>"]
 license = "GNU GPL-v3"
 
 [tool.poetry.dependencies]
-python = ">=3.10,<3.11"
+python = ">=3.10,<3.12"
 # Change dateparser to 1.1.1 due to broken dependency issue
 dateparser = {git = "https://github.com/scrapinghub/dateparser.git", tag="v1.1.1"}
 psutil = "^5.9.1"
@@ -25,7 +25,8 @@ Levenshtein = "^0.18.1"
 uvloop = {version = "==0.16.0", platform="linux"}
 aiodns = "~=3.0"
 Brotli = "~=1.0"
-kosu = {git = "https://github.com/HyperGH/kosu.git", branch="main"}
+# kosu = {git = "https://github.com/hypergonial/kosu.git", branch="main"}
+hikari = ">=2.0.0.dev108, <2.0.0.dev115"
 hikari-lightbulb = "==2.3.1"
 hikari-miru = "==2.0.4"
 beautifulsoup4 = "^4.11.1"

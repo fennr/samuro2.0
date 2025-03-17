@@ -30,16 +30,16 @@ from utils.nexuscompendium import weekly_rotation
 
 logger = logging.getLogger(__name__)
 
-hots = SamuroPlugin('HeroesOfTheStorm Commands')
+hots = SamuroPlugin("HeroesOfTheStorm Commands")
 
 test_guild = 642852514865217578
 
 
 class HeroCommands(str, enum.Enum):
-    HERO = 'hero'
-    SKILL = 'skill'
-    TALENT = 'talent'
-    STLK = 'stlk'
+    HERO = "hero"
+    SKILL = "skill"
+    TALENT = "talent"
+    STLK = "stlk"
 
 
 class HeroView(AuthorOnlyView):
@@ -77,36 +77,26 @@ class HeroView(AuthorOnlyView):
         if self.command == HeroCommands.TALENT:
             self.add_item(TalentSelect(hero=self.hero))
 
-    @miru.button(
-        label='Герой', style=hikari.ButtonStyle.PRIMARY, custom_id='hero'
-    )
-    async def hero_button(
-        self, button: miru.Button, ctx: miru.ViewContext
-    ) -> None:
+    @miru.button(label="Герой", style=hikari.ButtonStyle.PRIMARY, custom_id="hero")
+    async def hero_button(self, button: miru.Button, ctx: miru.ViewContext) -> None:
         self.command = HeroCommands.HERO
         embed = self.hero.get_description_embed()
         self.update_select()
         await ctx.edit_response(embed=embed, components=self.build())
 
     @miru.button(
-        label='Способности',
+        label="Способности",
         style=hikari.ButtonStyle.PRIMARY,
-        custom_id='skill',
+        custom_id="skill",
     )
-    async def skill_button(
-        self, button: miru.Button, ctx: miru.ViewContext
-    ) -> None:
+    async def skill_button(self, button: miru.Button, ctx: miru.ViewContext) -> None:
         self.command = HeroCommands.SKILL
-        embed = self.hero.get_skills_embed(type='basic')
+        embed = self.hero.get_skills_embed(type="basic")
         self.update_select()
         await ctx.edit_response(embed=embed, components=self.build())
 
-    @miru.button(
-        label='Таланты', style=hikari.ButtonStyle.PRIMARY, custom_id='talent'
-    )
-    async def talent_button(
-        self, button: miru.Button, ctx: miru.ViewContext
-    ) -> None:
+    @miru.button(label="Таланты", style=hikari.ButtonStyle.PRIMARY, custom_id="talent")
+    async def talent_button(self, button: miru.Button, ctx: miru.ViewContext) -> None:
         self.command = HeroCommands.TALENT
         embed = self.hero.get_talents_embed(level=1)
         self.update_select()
@@ -115,7 +105,7 @@ class HeroView(AuthorOnlyView):
 
 class EventView(miru.View):
     def __init__(self, *, ctx: SamuroSlashContext, event: HotsEvent) -> None:
-        super(EventView, self).__init__(timeout=240)
+        super(EventView, self).__init__(timeout=1)
         self.ctx = ctx
         self.event = event
 
@@ -128,56 +118,16 @@ class EventView(miru.View):
         except hikari.NotFoundError:
             pass
 
-    @miru.button(
-        label='Проголосовать',
-        style=hikari.ButtonStyle.PRIMARY,
-        custom_id='blue',
-    )
-    async def blue_vote(
-        self, button: miru.Button, ctx: miru.ViewContext
-    ) -> None:
-        await self.ctx.app.db.execute(
-            """
-            INSERT INTO votes (id, event_id, vote) VALUES ($1, $2, $3)
-            ON CONFLICT (id, event_id) 
-            DO UPDATE SET vote = $3""",
-            self.ctx.author.id,
-            self.event.id,
-            util.EventWinner.BLUE,
-        )
-        await ctx.respond(
-            'Засчитан голос за синих', flags=hikari.MessageFlag.EPHEMERAL
-        )
-
-    @miru.button(
-        label='Проголосовать', style=hikari.ButtonStyle.DANGER, custom_id='red'
-    )
-    async def red_vote(
-        self, button: miru.Button, ctx: miru.ViewContext
-    ) -> None:
-        await self.ctx.app.db.execute(
-            """
-            INSERT INTO votes (id, event_id, vote) VALUES ($1, $2, $3)
-            ON CONFLICT (id, event_id) 
-            DO UPDATE SET vote = $3""",
-            self.ctx.author.id,
-            self.event.id,
-            util.EventWinner.RED,
-        )
-        await ctx.respond(
-            'Засчитан голос за красных', flags=hikari.MessageFlag.EPHEMERAL
-        )
-
 
 class SkillSelect(miru.Select):
     def __init__(self, *, hero: HotsHero) -> None:
         super(SkillSelect, self).__init__(
             options=[
-                miru.SelectOption(label='Базовые', value='basic'),
-                miru.SelectOption(label='Героические', value='heroic'),
-                miru.SelectOption(label='Особая', value='trait'),
+                miru.SelectOption(label="Базовые", value="basic"),
+                miru.SelectOption(label="Героические", value="heroic"),
+                miru.SelectOption(label="Особая", value="trait"),
             ],
-            placeholder='Посмотреть другие способности',
+            placeholder="Посмотреть другие способности",
         )
         self.hero = hero
 
@@ -190,15 +140,15 @@ class TalentSelect(miru.Select):
     def __init__(self, *, hero: HotsHero) -> None:
         super(TalentSelect, self).__init__(
             options=[
-                miru.SelectOption(label='1', value='1'),
-                miru.SelectOption(label='4', value='4'),
-                miru.SelectOption(label='7', value='7'),
-                miru.SelectOption(label='10', value='10'),
-                miru.SelectOption(label='13', value='13'),
-                miru.SelectOption(label='16', value='16'),
-                miru.SelectOption(label='20', value='20'),
+                miru.SelectOption(label="1", value="1"),
+                miru.SelectOption(label="4", value="4"),
+                miru.SelectOption(label="7", value="7"),
+                miru.SelectOption(label="10", value="10"),
+                miru.SelectOption(label="13", value="13"),
+                miru.SelectOption(label="16", value="16"),
+                miru.SelectOption(label="20", value="20"),
             ],
-            placeholder='Посмотреть другие таланты',
+            placeholder="Посмотреть другие таланты",
         )
         self.hero = hero
 
@@ -209,15 +159,13 @@ class TalentSelect(miru.Select):
 
 @hots.command
 @lightbulb.option(
-    name='name',
-    description='Имя героя',
+    name="name",
+    description="Имя героя",
     type=t.Optional[str],
     required=True,
     autocomplete=True,
 )
-@lightbulb.command(
-    name=HeroCommands.HERO, description='Информация о герое', pass_options=True
-)
+@lightbulb.command(name=HeroCommands.HERO, description="Информация о герое", pass_options=True)
 @lightbulb.implements(lightbulb.SlashCommand)
 async def hero_command(ctx: SamuroSlashContext, name: str) -> None:
     hero = HotsHero(name.title())
@@ -231,27 +179,25 @@ async def hero_command(ctx: SamuroSlashContext, name: str) -> None:
 
 @hots.command
 @lightbulb.option(
-    name='type',
-    description='Тип способности',
+    name="type",
+    description="Тип способности",
     required=True,
-    choices=['basic', 'heroic', 'trait'],
+    choices=["basic", "heroic", "trait"],
 )
 @lightbulb.option(
-    name='name',
-    description='Имя героя',
+    name="name",
+    description="Имя героя",
     type=t.Optional[str],
     required=True,
     autocomplete=True,
 )
 @lightbulb.command(
     name=HeroCommands.SKILL,
-    description='Информация о навыках героя',
+    description="Информация о навыках героя",
     pass_options=True,
 )
 @lightbulb.implements(lightbulb.SlashCommand)
-async def skills_command(
-    ctx: SamuroSlashContext, name: str, type: str
-) -> None:
+async def skills_command(ctx: SamuroSlashContext, name: str, type: str) -> None:
     hero = HotsHero(name.title())
     view = HeroView(lctx=ctx, command=ctx.command.name, hero=hero)
 
@@ -263,28 +209,26 @@ async def skills_command(
 
 @hots.command
 @lightbulb.option(
-    name='level',
-    description='Уровень таланта',
+    name="level",
+    description="Уровень таланта",
     type=int,
     required=True,
     choices=[1, 4, 7, 10, 13, 16, 20],
 )
 @lightbulb.option(
-    name='name',
-    description='Имя героя',
+    name="name",
+    description="Имя героя",
     type=t.Optional[str],
     required=True,
     autocomplete=True,
 )
 @lightbulb.command(
     name=HeroCommands.TALENT,
-    description='Информация о талантах героя',
+    description="Информация о талантах героя",
     pass_options=True,
 )
 @lightbulb.implements(lightbulb.SlashCommand)
-async def talent_command(
-    ctx: SamuroSlashContext, name: str, level: int
-) -> None:
+async def talent_command(ctx: SamuroSlashContext, name: str, level: int) -> None:
     hero = HotsHero(name)
     view = HeroView(lctx=ctx, command=ctx.command.name, hero=hero)
 
@@ -296,15 +240,13 @@ async def talent_command(
 
 @hots.command
 @lightbulb.option(
-    name='name',
-    description='Имя героя',
+    name="name",
+    description="Имя героя",
     type=t.Optional[str],
     required=True,
     autocomplete=True,
 )
-@lightbulb.command(
-    name=HeroCommands.STLK, description='Билды от Сталка', pass_options=True
-)
+@lightbulb.command(name=HeroCommands.STLK, description="Билды от Сталка", pass_options=True)
 @lightbulb.implements(lightbulb.SlashCommand)
 async def stlk_command(ctx: SamuroSlashContext, name: str) -> None:
     hero = HotsHero(name)
@@ -314,10 +256,10 @@ async def stlk_command(ctx: SamuroSlashContext, name: str) -> None:
     await ctx.respond(embed=embed)
 
 
-@stlk_command.autocomplete('name')
-@talent_command.autocomplete('name')
-@skills_command.autocomplete('name')
-@hero_command.autocomplete('name')
+@stlk_command.autocomplete("name")
+@talent_command.autocomplete("name")
+@skills_command.autocomplete("name")
+@hero_command.autocomplete("name")
 async def hero_name_ac(
     option: hikari.AutocompleteInteractionOption,
     interaction: hikari.AutocompleteInteraction,
@@ -329,10 +271,8 @@ async def hero_name_ac(
 
 @hots.command
 @lightbulb.add_checks(is_lead)
-@lightbulb.option('name', 'Имя текущего сезона')
-@lightbulb.command(
-    'season', 'Установить название текущего сезона', pass_options=True
-)
+@lightbulb.option("name", "Имя текущего сезона")
+@lightbulb.command("season", "Установить название текущего сезона", pass_options=True)
 @lightbulb.implements(lightbulb.SlashCommand)
 async def set_season(ctx: SamuroSlashContext, name: str) -> None:
     await ctx.app.db.execute(
@@ -348,15 +288,15 @@ async def set_season(ctx: SamuroSlashContext, name: str) -> None:
     )
     await ctx.respond(
         embed=hikari.Embed(
-            title='✅ Сезон обновлен',
-            description=f'Имя нового сезона - {name}',
+            title="✅ Сезон обновлен",
+            description=f"Имя нового сезона - {name}",
             color=const.MISC_COLOR,
         )
     )
 
 
 @hots.command
-@lightbulb.command('profile', 'Команды связанные с профилями')
+@lightbulb.command("profile", "Команды связанные с профилями")
 @lightbulb.implements(lightbulb.SlashCommandGroup)
 async def hots_profile(ctx: SamuroSlashContext) -> None:
     pass
@@ -364,14 +304,12 @@ async def hots_profile(ctx: SamuroSlashContext) -> None:
 
 @hots_profile.child
 @lightbulb.option(
-    name='member',
-    description='Профиль игрока',
+    name="member",
+    description="Профиль игрока",
     type=hikari.Member,
     required=True,
 )
-@lightbulb.command(
-    name='show', description='Показать профиль', pass_options=True
-)
+@lightbulb.command(name="show", description="Показать профиль", pass_options=True)
 @lightbulb.implements(lightbulb.SlashSubCommand)
 async def get_profile(ctx: SamuroSlashContext, member: hikari.Member) -> None:
     user = await HotsPlayer.fetch(member, guild_id=ctx.guild_id)
@@ -379,28 +317,18 @@ async def get_profile(ctx: SamuroSlashContext, member: hikari.Member) -> None:
 
 
 @hots.command
-@lightbulb.command(
-    'HotS профиль', 'Показать профиль игрока', pass_options=True
-)
+@lightbulb.command("HotS профиль", "Показать профиль игрока", pass_options=True)
 @lightbulb.implements(lightbulb.UserCommand)
-async def get_profile_user_command(
-    ctx: SamuroUserContext, target: hikari.Member
-) -> None:
+async def get_profile_user_command(ctx: SamuroUserContext, target: hikari.Member) -> None:
     user = await HotsPlayer.fetch(target, ctx.guild_id)
     await ctx.respond(embed=await user.profile())
 
 
 @hots_profile.child
-@lightbulb.option(
-    'member', 'Пользователь для сравнения', type=hikari.Member, required=True
-)
-@lightbulb.command(
-    'versus', 'Посмотреть статистику матчей с игроком', pass_options=True
-)
+@lightbulb.option("member", "Пользователь для сравнения", type=hikari.Member, required=True)
+@lightbulb.command("versus", "Посмотреть статистику матчей с игроком", pass_options=True)
 @lightbulb.implements(lightbulb.SlashSubCommand)
-async def profile_versus(
-    ctx: SamuroSlashContext, member: hikari.Member
-) -> None:
+async def profile_versus(ctx: SamuroSlashContext, member: hikari.Member) -> None:
     player = await HotsPlayer.fetch(ctx.member, ctx.guild_id)
     embed = await player.versus_stats(member)
 
@@ -409,18 +337,18 @@ async def profile_versus(
 
 @hots_profile.child
 @lightbulb.add_checks(is_lead)
-@lightbulb.option('comment', 'Комментарий с причиной', type=str, required=True)
-@lightbulb.option('block', 'Заблокировать', type=bool, required=False)
+@lightbulb.option("comment", "Комментарий с причиной", type=str, required=True)
+@lightbulb.option("block", "Заблокировать", type=bool, required=False)
 @lightbulb.option(
-    'mmr',
-    'Изменить ММР',
+    "mmr",
+    "Изменить ММР",
     type=int,
     min_value=2200,
     max_value=3200,
     required=False,
 )
-@lightbulb.option('member', 'Пользователь', type=hikari.Member, required=True)
-@lightbulb.command('change', 'Изменить данные пользователя')
+@lightbulb.option("member", "Пользователь", type=hikari.Member, required=True)
+@lightbulb.command("change", "Изменить данные пользователя")
 @lightbulb.implements(lightbulb.SlashSubCommand)
 async def profile_update(ctx: SamuroSlashContext) -> None:
     player = await HotsPlayer.fetch(ctx.options.member, ctx.guild_id)
@@ -428,30 +356,30 @@ async def profile_update(ctx: SamuroSlashContext) -> None:
     if ctx.options.mmr:
         await player.change_log(
             admin=ctx.author,
-            type='mmr change',
-            message=f'{player.battle_tag} {player.mmr} -> {ctx.options.mmr}: {ctx.options.comment}',
+            type="mmr change",
+            message=f"{player.battle_tag} {player.mmr} -> {ctx.options.mmr}: {ctx.options.comment}",
         )
         player.mmr = ctx.options.mmr
     if ctx.options.block is not None:
         if ctx.options.block:
             await player.change_log(
                 admin=ctx.author,
-                type='block',
-                message=f'{player.battle_tag} ban: {ctx.options.comment}',
+                type="block",
+                message=f"{player.battle_tag} ban: {ctx.options.comment}",
             )
         else:
             await player.change_log(
                 admin=ctx.author,
-                type='unblock',
-                message=f'{player.battle_tag} unban: {ctx.options.comment}',
+                type="unblock",
+                message=f"{player.battle_tag} unban: {ctx.options.comment}",
             )
         player.blocked = ctx.options.block
 
     await player.update()
     await ctx.respond(
         embed=hikari.Embed(
-            title='Обновление выполнено',
-            description='Профиль игрока изменен',
+            title="Обновление выполнено",
+            description="Профиль игрока изменен",
             color=const.EMBED_BLUE,
         ),
         flags=hikari.MessageFlag.EPHEMERAL,
@@ -461,20 +389,18 @@ async def profile_update(ctx: SamuroSlashContext) -> None:
 @hots_profile.child
 @lightbulb.add_checks(is_lead)
 @lightbulb.option(
-    'mmr',
-    'mmr игрока',
+    "mmr",
+    "mmr игрока",
     type=int,
     required=True,
     min_value=2200,
     max_value=3200,
 )
-@lightbulb.option('battletag', 'Батлтег игрока', type=str, required=True)
-@lightbulb.option('member', 'Пользователь', type=hikari.Member, required=True)
-@lightbulb.command('add', 'Добавить профиль в базу', pass_options=True)
+@lightbulb.option("battletag", "Батлтег игрока", type=str, required=True)
+@lightbulb.option("member", "Пользователь", type=hikari.Member, required=True)
+@lightbulb.command("add", "Добавить профиль в базу", pass_options=True)
 @lightbulb.implements(lightbulb.SlashSubCommand)
-async def get_profile(
-    ctx: SamuroSlashContext, member: hikari.Member, battletag: str, mmr: int
-) -> None:
+async def get_profile(ctx: SamuroSlashContext, member: hikari.Member, battletag: str, mmr: int) -> None:
     await ctx.respond(hikari.ResponseType.DEFERRED_MESSAGE_CREATE)
     user = await HotsPlayer.add(member=member, battletag=battletag, mmr=mmr)
     await ctx.respond(embed=await user.profile())
@@ -482,14 +408,12 @@ async def get_profile(
 
 @hots_profile.child
 @lightbulb.option(
-    name='member',
-    description='Профиль игрока',
+    name="member",
+    description="Профиль игрока",
     type=hikari.Member,
     required=True,
 )
-@lightbulb.command(
-    name='history', description='История матчей', pass_options=True
-)
+@lightbulb.command(name="history", description="История матчей", pass_options=True)
 @lightbulb.implements(lightbulb.SlashSubCommand)
 async def get_history(ctx: SamuroSlashContext, member: hikari.Member) -> None:
     user = await HotsPlayer.fetch(member, guild_id=ctx.guild_id)
@@ -502,13 +426,9 @@ async def get_history(ctx: SamuroSlashContext, member: hikari.Member) -> None:
 
 
 @hots.command
-@lightbulb.command(
-    'История матчей', 'Показать историю матчей', pass_options=True
-)
+@lightbulb.command("История матчей", "Показать историю матчей", pass_options=True)
 @lightbulb.implements(lightbulb.UserCommand)
-async def get_history_user_command(
-    ctx: SamuroUserContext, target: hikari.Member
-) -> None:
+async def get_history_user_command(ctx: SamuroUserContext, target: hikari.Member) -> None:
     user = await HotsPlayer.fetch(target, guild_id=ctx.guild_id)
 
     embeds = await user.log_page()
@@ -519,7 +439,7 @@ async def get_history_user_command(
 
 @hots.command
 @lightbulb.add_checks(lightbulb.owner_only)
-@lightbulb.command('fix', 'Исправления')
+@lightbulb.command("fix", "Исправления")
 @lightbulb.implements(lightbulb.SlashCommandGroup)
 async def hots_fix(ctx: SamuroSlashContext) -> None:
     pass
@@ -527,17 +447,15 @@ async def hots_fix(ctx: SamuroSlashContext) -> None:
 
 @hots_fix.child
 @lightbulb.add_checks(lightbulb.owner_only)
-@lightbulb.command('leagues', 'Исправить лиги по ммр')
+@lightbulb.command("leagues", "Исправить лиги по ммр")
 @lightbulb.implements(lightbulb.SlashSubCommand)
 async def fix_leagues(ctx: SamuroSlashContext) -> None:
     await fix_league_by_mmr(ctx)
-    await ctx.respond(
-        'Лиги игроков исправлены', flags=hikari.MessageFlag.EPHEMERAL
-    )
+    await ctx.respond("Лиги игроков исправлены", flags=hikari.MessageFlag.EPHEMERAL)
 
 
 @hots.command
-@lightbulb.command('achievement', 'Команды связанные с достижениями')
+@lightbulb.command("achievement", "Команды связанные с достижениями")
 @lightbulb.implements(lightbulb.SlashCommandGroup)
 async def hots_achievements(ctx: SamuroSlashContext) -> None:
     pass
@@ -545,22 +463,18 @@ async def hots_achievements(ctx: SamuroSlashContext) -> None:
 
 @hots_achievements.child
 @hots.command
-@lightbulb.command('event', 'Команды связанные с ивентами')
+@lightbulb.command("event", "Команды связанные с ивентами")
 @lightbulb.implements(lightbulb.SlashCommandGroup)
 async def hots_events(ctx: SamuroSlashContext) -> None:
     pass
 
 
 @hots_events.child
-@lightbulb.option(
-    name='event_id', description='ID матча', type=int, required=True
-)
-@lightbulb.command(name='view', description='Показать матч', pass_options=True)
+@lightbulb.option(name="event_id", description="ID матча", type=int, required=True)
+@lightbulb.command(name="view", description="Показать матч", pass_options=True)
 @lightbulb.implements(lightbulb.SlashSubCommand)
 async def get_event(ctx: SamuroSlashContext, event_id: int) -> None:
-    event = await HotsEvent.fetch(
-        event_id, guild_id=ctx.guild_id
-    )  # потом поменять на ctx.guild.id
+    event = await HotsEvent.fetch(event_id, guild_id=ctx.guild_id)  # потом поменять на ctx.guild.id
 
     embed = event.fetch_embed()
 
@@ -569,30 +483,28 @@ async def get_event(ctx: SamuroSlashContext, event_id: int) -> None:
 
 @hots_events.child
 @lightbulb.option(
-    name='players',
-    description='Игроки',
+    name="players",
+    description="Игроки",
     type=t.List[hikari.Member],
     required=True,
 )
 @lightbulb.command(
-    name='captains',
-    description='Выбрать случайных капитанов',
+    name="captains",
+    description="Выбрать случайных капитанов",
     pass_options=True,
 )
 @lightbulb.implements(lightbulb.SlashSubCommand)
-async def event_capitans(
-    ctx: SamuroSlashContext, players: t.List[hikari.Member]
-) -> None:
+async def event_capitans(ctx: SamuroSlashContext, players: t.List[hikari.Member]) -> None:
     players = utils.hots.players_parse(players)
     if len(players) > 1:
         blue, red = random.sample(players, k=2)
         message = (
-            f'{const.EMOJI_BLUE} {ctx.app.cache.get_member(ctx.guild_id, blue).mention}\n'
-            f'{const.EMOJI_RED} {ctx.app.cache.get_member(ctx.guild_id, red).mention}'
+            f"{const.EMOJI_BLUE} {ctx.app.cache.get_member(ctx.guild_id, blue).mention}\n"
+            f"{const.EMOJI_RED} {ctx.app.cache.get_member(ctx.guild_id, red).mention}"
         )
         await ctx.respond(
             embed=hikari.Embed(
-                title='Случайный выбор капитанов',
+                title="Случайный выбор капитанов",
                 description=message,
                 color=const.MISC_COLOR,
             ),
@@ -600,8 +512,8 @@ async def event_capitans(
     else:
         await ctx.respond(
             embed=hikari.Embed(
-                title='Ошибка',
-                description='В комнате должно быть хотя бы 2 человека',
+                title="Ошибка",
+                description="В комнате должно быть хотя бы 2 человека",
                 color=const.ERROR_COLOR,
             ),
             flags=hikari.MessageFlag.EPHEMERAL,
@@ -609,24 +521,22 @@ async def event_capitans(
 
 
 @hots_events.child
-@lightbulb.command(name='list', description='Список всех ивентов')
+@lightbulb.command(name="list", description="Список всех ивентов")
 @lightbulb.implements(lightbulb.SlashSubCommand)
 async def event_list(ctx: SamuroSlashContext) -> None:
     events = await HotsEvent.fetch_all(guild_id=ctx.guild_id)
 
     if not events:
-        await ctx.respond('Нет событий на сервере')
+        await ctx.respond("Нет событий на сервере")
 
     paginator = lightbulb.utils.StringPaginator(max_chars=300)
     for event in events:
         emoji = util.get_emoji_winner(event.winner)
-        paginator.add_line(
-            f'{emoji} ID: {event.id} - {event.ftime} - {event.map}'
-        )
+        paginator.add_line(f"{emoji} ID: {event.id} - {event.ftime} - {event.map}")
 
     embeds = [
         hikari.Embed(
-            title='Список всех матчей сервера\nПобедитель, ID, Время, Карта',
+            title="Список всех матчей сервера\nПобедитель, ID, Время, Карта",
             description=page,
             color=const.EMBED_BLUE,
         )
@@ -638,30 +548,27 @@ async def event_list(ctx: SamuroSlashContext) -> None:
 
 @hots_events.child
 @lightbulb.add_checks(lightbulb.owner_only)
-@lightbulb.option(
-    name='event_id', description='ID матча', type=int, required=True
-)
-@lightbulb.command(name='log', description='Дозапись матча', pass_options=True)
+@lightbulb.option(name="event_id", description="ID матча", type=int, required=True)
+@lightbulb.command(name="log", description="Дозапись матча", pass_options=True)
 @lightbulb.implements(lightbulb.SlashSubCommand)
 async def event_add_log(ctx: SamuroSlashContext, event_id: int) -> None:
     event = await HotsEvent.fetch(event_id, guild_id=ctx.guild_id)
     await event.add_log()
-    await ctx.respond(f'Запись матча #{event.id} добавлена')
+    await ctx.respond(f"Запись матча #{event.id} добавлена")
 
 
 @hots_events.child
 @lightbulb.option(
-    name='rand',
-    description='Случайный выбор',
+    name="rand",
+    description="Случайный выбор",
     type=bool,
     required=True,
     default=False,
 )
 @lightbulb.add_checks(is_lead)
-@lightbulb.command(name='map', description='Выбор карты', pass_options=True)
+@lightbulb.command(name="map", description="Выбор карты", pass_options=True)
 @lightbulb.implements(lightbulb.SlashSubCommand)
 async def event_map(ctx: SamuroSlashContext, rand: bool) -> None:
-
     maps = """
 0. Альтеракский перевал
 1. Вечная битва
@@ -675,44 +582,40 @@ async def event_map(ctx: SamuroSlashContext, rand: bool) -> None:
 9. Гробница Королевы Пауков
 10. Башни Рока"""
     if rand:
-        maps_list = maps.split('\n')
+        maps_list = maps.split("\n")
         await ctx.respond(
             embed=hikari.Embed(
-                title='Случайный выбор карты',
+                title="Случайный выбор карты",
                 description=random.choice(maps_list),
                 color=const.EMBED_GREEN,
             )
         )
     else:
         numbers = [
-            '<:AlteracPass:1088157950008377465>',
-            '<:BattlefieldOfEternity:1088157948355813387>',
-            '<:BraxisOutpost:1088157956400500796>',
-            '<:CursedHollow:1088157952726278175>',
-            '<:DragonShire:1088157955028959322>',
-            '<:GardenOfTerror:1088157970057138256>',
-            '<:HanamuraTemple:1088157957872693398>',
-            '<:InfernalShrines:1088157961320403104>',
-            '<:SkyTemple:1088157962637430805>',
-            '<:TombOfTheSpiderQueen:1088157965254672526>',
-            '<:TowersOfDoom:1088157968555585667>',
+            "<:AlteracPass:1088157950008377465>",
+            "<:BattlefieldOfEternity:1088157948355813387>",
+            "<:BraxisOutpost:1088157956400500796>",
+            "<:CursedHollow:1088157952726278175>",
+            "<:DragonShire:1088157955028959322>",
+            "<:GardenOfTerror:1088157970057138256>",
+            "<:HanamuraTemple:1088157957872693398>",
+            "<:InfernalShrines:1088157961320403104>",
+            "<:SkyTemple:1088157962637430805>",
+            "<:TombOfTheSpiderQueen:1088157965254672526>",
+            "<:TowersOfDoom:1088157968555585667>",
         ]
 
         embed = hikari.Embed(
-            title='Выбор карты',
+            title="Выбор карты",
             description=maps,
             color=const.EMBED_BLUE,
         )
-        message = await ctx.app.rest.create_message(
-            ctx.channel_id, embed=embed
-        )
-        task = asyncio.create_task(
-            utils.helpers.add_emoji(message, numbers, custom=True)
-        )
+        message = await ctx.app.rest.create_message(ctx.channel_id, embed=embed)
+        task = asyncio.create_task(utils.helpers.add_emoji(message, numbers, custom=True))
 
         await ctx.respond(
             embed=hikari.Embed(
-                title='✅ Голосование за выбор карты создано!',
+                title="✅ Голосование за выбор карты создано!",
                 color=const.EMBED_GREEN,
             ),
             flags=hikari.MessageFlag.EPHEMERAL,
@@ -724,48 +627,44 @@ async def event_map(ctx: SamuroSlashContext, rand: bool) -> None:
 @hots_events.child
 @lightbulb.add_checks(is_lead)
 @lightbulb.option(
-    name='lose_p',
-    description='Баллы за поражение',
+    name="lose_p",
+    description="Баллы за поражение",
     type=int,
     min_value=1,
     max_value=4,
     default=1,
 )
 @lightbulb.option(
-    name='win_p',
-    description='Баллы за победу',
+    name="win_p",
+    description="Баллы за победу",
     type=int,
     min_value=4,
     max_value=8,
     default=4,
 )
 @lightbulb.option(
-    name='mmr',
-    description='Изменение ммр за матч',
+    name="mmr",
+    description="Изменение ммр за матч",
     type=int,
     default=4,
     min_value=0,
     max_value=8,
 )
 @lightbulb.option(
-    name='players',
-    description='Игроки',
+    name="players",
+    description="Игроки",
     type=t.List[hikari.Member],
     required=True,
 )
+@lightbulb.option(name="map", description="Карта", choices=util.maps, required=True)
 @lightbulb.option(
-    name='map', description='Карта', choices=util.maps, required=True
-)
-@lightbulb.option(
-    name='type',
-    description='Тип ивента',
+    name="type",
+    description="Тип ивента",
     choices=util.event_types,
     default=util.event_types[0],
     required=True,
 )
-@lightbulb.command(
-    name='create', description='Создать ивент', pass_options=True
-)
+@lightbulb.command(name="create", description="Создать ивент", pass_options=True)
 @lightbulb.implements(lightbulb.SlashSubCommand)
 async def event_create(
     ctx: SamuroSlashContext,
@@ -795,7 +694,7 @@ async def event_create(
 
 @hots_events.child
 @lightbulb.add_checks(is_lead)
-@lightbulb.command(name='remove', description='Удалить ивент')
+@lightbulb.command(name="remove", description="Удалить ивент")
 @lightbulb.implements(lightbulb.SlashSubCommand)
 async def event_remove(ctx: SamuroSlashContext) -> None:
     event = await HotsEvent.get_active_event(ctx)
@@ -808,14 +707,12 @@ async def event_remove(ctx: SamuroSlashContext) -> None:
 @hots_events.child
 @lightbulb.add_checks(is_lead)
 @lightbulb.option(
-    name='winner',
-    description='Победитель',
+    name="winner",
+    description="Победитель",
     choices=[EventWinner.BLUE.value, EventWinner.RED.value],
     required=True,
 )
-@lightbulb.command(
-    name='end', description='Завершить ивент', pass_options=True
-)
+@lightbulb.command(name="end", description="Завершить ивент", pass_options=True)
 @lightbulb.implements(lightbulb.SlashSubCommand)
 async def event_ending(ctx: SamuroSlashContext, winner: str) -> None:
     await ctx.respond(hikari.ResponseType.DEFERRED_MESSAGE_CREATE)
@@ -829,21 +726,19 @@ async def event_ending(ctx: SamuroSlashContext, winner: str) -> None:
 @hots_events.child
 @lightbulb.add_checks(lightbulb.owner_only)
 @lightbulb.option(
-    name='winner',
-    description='Победитель',
+    name="winner",
+    description="Победитель",
     choices=[EventWinner.BLUE.value, EventWinner.RED.value],
     required=True,
 )
-@lightbulb.command(
-    name='test', description='Тестирование голосований', pass_options=True
-)
+@lightbulb.command(name="test", description="Тестирование голосований", pass_options=True)
 @lightbulb.implements(lightbulb.SlashSubCommand)
 async def event_test(ctx: SamuroSlashContext, winner: str) -> None:
     event = await HotsEvent.get_active_event(ctx)
 
     await event.vote_log(winner=winner)
 
-    await ctx.respond('Голоса подсчитаны', flags=hikari.MessageFlag.EPHEMERAL)
+    await ctx.respond("Голоса подсчитаны", flags=hikari.MessageFlag.EPHEMERAL)
 
 
 """@hots.command
@@ -865,8 +760,8 @@ async def inter_event(event: hikari.InteractionCreateEvent):
 
 @hots.command
 @lightbulb.command(
-    name='weekly',
-    description='Еженедельная ротация героев',
+    name="weekly",
+    description="Еженедельная ротация героев",
 )
 @lightbulb.implements(lightbulb.SlashCommand)
 async def embed_weekly_rotation(ctx: SamuroSlashContext) -> None:

@@ -6,7 +6,8 @@ import typing as t
 
 import aiohttp
 import hikari
-import kosu
+
+# import kosu
 import lightbulb
 import miru
 
@@ -83,7 +84,7 @@ class SamuroBot(lightbulb.BotApp):
         intents = (
             hikari.Intents.GUILDS
             | hikari.Intents.GUILD_MEMBERS
-            | hikari.Intents.GUILD_BANS
+            # | hikari.Intents.GUILD_BANS
             | hikari.Intents.GUILD_EMOJIS
             | hikari.Intents.GUILD_INVITES
             | hikari.Intents.ALL_MESSAGE_REACTIONS
@@ -123,7 +124,7 @@ class SamuroBot(lightbulb.BotApp):
         self._db_backup_loop = IntervalLoop(self.backup_db, seconds=3600 * 24)
         self.skip_first_db_backup = True  # Set to False to backup DB on bot startup too
         self._user_id: t.Optional[hikari.Snowflake] = None
-        self._perspective: t.Optional[kosu.Client] = None
+        self._perspective = None
         self._scheduler = scheduler.Scheduler(self)
         self._initial_guilds: t.List[hikari.Snowflake] = []
 
@@ -173,7 +174,7 @@ class SamuroBot(lightbulb.BotApp):
         return self._scheduler
 
     @property
-    def perspective(self) -> kosu.Client:
+    def perspective(self):
         """The perspective client of the bot."""
         if self._perspective is None:
             raise hikari.ComponentStateConflictError(
@@ -264,12 +265,11 @@ class SamuroBot(lightbulb.BotApp):
         # Load all extensions
         self.load_extensions_from(os.path.join(self.base_dir, "extensions"), must_exist=True)
         self.unload_extensions("extensions.help")
-        #self.unload_extensions("extensions.settings")
+        # self.unload_extensions("extensions.settings")
         self.unload_extensions("extensions.test")
-        #self.unload_extensions("extensions.troubleshooter")
+        # self.unload_extensions("extensions.troubleshooter")
 
     async def on_started(self, event: hikari.StartedEvent) -> None:
-
         self._db_backup_loop.start()
 
         user = self.get_me()
@@ -283,7 +283,6 @@ class SamuroBot(lightbulb.BotApp):
             logging.warning("Developer mode is enabled!")
 
     async def on_lightbulb_started(self, event: lightbulb.LightbulbStartedEvent) -> None:
-
         # Insert all guilds the bot is member of into the db global config on startup
         async with self.db.acquire() as con:
             for guild_id in self._initial_guilds:

@@ -3,10 +3,8 @@ services:
   samuro-db:
     image: postgres:14
     restart: always
-    expose:
-      - 5433
     ports:
-      - "5433:5432"
+      - "45436:5432"
     env_file:
       - .env
     environment:

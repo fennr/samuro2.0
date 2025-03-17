@@ -2,6 +2,7 @@ FROM python:3.10
 
 ARG postgres_version=14
 
+ENV POETRY_VERSION=1.7.1
 RUN curl -sSL https://install.python-poetry.org | python3 -
 ENV PATH "$PATH:/root/.local/bin"
 
