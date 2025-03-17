@@ -332,14 +332,14 @@ async def leaderboard(ctx: SamuroSlashContext) -> None:
 
     description = []
     for i, record in enumerate(records, 1):
-        medal = "🥇" if i == 1 else "🥈" if i == 2 else "🥉" if i == 3 else "▫️"
+        medal = "🥇" if i == 1 else "🥈" if i == 2 else "🥉" if i == 3 else f"{i}. "
         winrate = round((record["win"] / (record["win"] + record["lose"])) * 100 if record["win"] + record["lose"] > 0 else 0)
         description.append(
             f"{medal} **{record['btag']}** ({record['league']})\n"
-            f"⭐ Очки: {record['points']} | 📊 {record['win']}В/{record['lose']}П ({winrate}%)"
+            f"⭐ Очки: {record['points']} | 📊 {record['win']}Win/{record['lose']}Lose ({winrate}%)"
         )
 
-    embed.description = "\n".join(description)
+    embed.description = "\n\n".join(description)
     
     await ctx.respond(embed=embed)
 
