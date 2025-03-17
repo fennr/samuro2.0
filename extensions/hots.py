@@ -294,6 +294,54 @@ async def set_season(ctx: SamuroSlashContext, name: str) -> None:
         )
     )
 
+@hots.command
+@lightbulb.command("leaderboard", "Показать лидерборд")
+@lightbulb.implements(lightbulb.SlashCommand)
+async def leaderboard(ctx: SamuroSlashContext) -> None:
+    # Получаем текущий сезон
+    season = await ctx.app.db.fetchval(
+        """
+        SELECT season FROM global_config where guild_id = $1
+        """,
+        ctx.guild_id
+    )
+    
+    # Получаем топ 10 игроков
+    records = await ctx.app.db.fetch(
+        """
+        SELECT ps.*, p.btag, p.mmr, p.league
+        FROM players_stats ps
+        INNER JOIN players p ON ps.id = p.id
+        WHERE ps.guild_id = $1 AND ps.season = $2
+        ORDER BY ps.points DESC
+        LIMIT 15
+        """,
+        ctx.guild_id,
+        season
+    )
+
+    if not records:
+        await ctx.respond("Нет данных для отображения")
+        return
+
+    # Формируем embed с таблицей лидеров
+    embed = hikari.Embed(
+        title=f"Таблица лидеров сезона {season}",
+        color=const.EMBED_BLUE
+    )
+
+    description = []
+    for i, record in enumerate(records, 1):
+        medal = "🥇" if i == 1 else "🥈" if i == 2 else "🥉" if i == 3 else "▫️"
+        winrate = round((record["win"] / (record["win"] + record["lose"])) * 100 if record["win"] + record["lose"] > 0 else 0)
+        description.append(
+            f"{medal} **{record['btag']}** ({record['league']})\n"
+            f"⭐ Очки: {record['points']} | 📊 {record['win']}В/{record['lose']}П ({winrate}%)"
+        )
+
+    embed.description = "\n".join(description)
+    
+    await ctx.respond(embed=embed)
 
 @hots.command
 @lightbulb.command("profile", "Команды связанные с профилями")
