@@ -21,7 +21,7 @@ from models.context import SamuroUserContext
 from models.heroes import HotsEvent
 from models.heroes import HotsHero
 from models.heroes import HotsPlayer
-from models.heroes import fix_league_by_mmr
+from models.heroes import fix_league_by_mmr, leagues
 from models.plugin import SamuroPlugin
 from models.views import AuthorOnlyView
 from utils import hots as util
