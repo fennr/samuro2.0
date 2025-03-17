@@ -295,6 +295,13 @@ async def set_season(ctx: SamuroSlashContext, name: str) -> None:
     )
 
 @hots.command
+@lightbulb.option(
+    "league",
+    "Выбрать лигу",
+    type=str,
+    choices=["Бронза", "Серебро", "Золото", "Платина", "Алмаз", "Мастер", "Грандмастер"],
+    required=False,
+)
 @lightbulb.command("leaderboard", "Показать лидерборд")
 @lightbulb.implements(lightbulb.SlashCommand)
 async def leaderboard(ctx: SamuroSlashContext) -> None:
@@ -306,27 +313,39 @@ async def leaderboard(ctx: SamuroSlashContext) -> None:
         ctx.guild_id
     )
     
-    # Получаем топ 10 игроков
-    records = await ctx.app.db.fetch(
-        """
+    # Формируем базовый SQL запрос
+    sql = """
         SELECT ps.*, p.btag, p.mmr, p.league
         FROM players_stats ps
         INNER JOIN players p ON ps.id = p.id
         WHERE ps.guild_id = $1 AND ps.season = $2
-        ORDER BY ps.points DESC
-        LIMIT 15
-        """,
-        ctx.guild_id,
-        season
-    )
+    """
+    
+    # Добавляем фильтр по лиге если она указана
+    params = [ctx.guild_id, season]
+    if ctx.options.league:
+        sql += " AND p.league = $3"
+        # Конвертируем русское название лиги в английское
+        eng_league = next(k for k, v in leagues.items() if v == ctx.options.league)
+        params.append(eng_league)
+
+    # Добавляем сортировку и лимит
+    sql += " ORDER BY ps.points DESC LIMIT 15"
+
+    # Получаем данные
+    records = await ctx.app.db.fetch(sql, *params)
 
     if not records:
         await ctx.respond("Нет данных для отображения")
         return
 
     # Формируем embed с таблицей лидеров
+    title = f"Таблица 5x5 лидеров"
+    if ctx.options.league:
+        title += f" | {ctx.options.league}"
+        
     embed = hikari.Embed(
-        title=f"Таблица лидеров сезона {season}",
+        title=title,
         color=const.EMBED_BLUE
     )
 
