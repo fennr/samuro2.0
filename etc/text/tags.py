@@ -7,20 +7,15 @@ class Titles:
     TagContent: str
     UnknownTag: str
 
+
 @dataclass(frozen=True)
 class Descriptions:
     TagName: str
     TagContent: str
 
 
-title = Titles(
-    TagName="Имя метки",
-    TagContent="Содержимое",
-    UnknownTag="❌ Неизвестная метка"
-
-)
+title = Titles(TagName="Имя метки", TagContent="Содержимое", UnknownTag="❌ Неизвестная метка")
 
 desc = Descriptions(
-    TagName="Введите имя метки...",
-    TagContent="Введите содержимое, поддерживается markdown разметка..."
+    TagName="Введите имя метки...", TagContent="Введите содержимое, поддерживается markdown разметка..."
 )

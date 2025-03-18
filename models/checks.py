@@ -33,12 +33,13 @@ async def is_lead(ctx: SamuroContext) -> bool:
         """
         SELECT * from lead_config WHERE guild_id = $1
         """,
-        ctx.guild_id
+        ctx.guild_id,
     )
     for record in records:
         if record.get("role_id") in member.role_ids:
             return True
     raise lightbulb.CheckFailure("Нет необходимой роли для использования команды")
+
 
 @lightbulb.Check  # type: ignore
 async def is_above_target(ctx: SamuroContext) -> bool:
@@ -167,6 +168,7 @@ def has_permissions(perm1: hikari.Permissions, *perms: hikari.Permissions) -> li
     """Just a shitty attempt at making has_guild_permissions fetch the channel if it is not present."""
     reduced = functools.reduce(operator.or_, [perm1, *perms])
     return lightbulb.Check(functools.partial(_has_permissions, perms=reduced))
+
 
 def bot_has_permissions(perm1: hikari.Permissions, *perms: hikari.Permissions) -> lightbulb.Check:
     """Just a shitty attempt at making bot_has_guild_permissions fetch the channel if it is not present."""

@@ -22,7 +22,6 @@ from models.heroes import HotsEvent
 from models.heroes import HotsHero
 from models.heroes import HotsPlayer
 from models.heroes import fix_league_by_mmr
-from models.heroes import leagues
 from models.plugin import SamuroPlugin
 from models.views import AuthorOnlyView
 from utils import hots as util
@@ -316,7 +315,7 @@ async def leaderboard(ctx: SamuroSlashContext) -> None:
     
     # Формируем базовый SQL запрос
     sql = """
-        SELECT ps.*, p.id, p.btag, p.mmr, p.league
+        SELECT ps.*, p.btag, p.mmr, p.league
         FROM players_stats ps
         INNER JOIN players p ON ps.id = p.id
         WHERE ps.guild_id = $1 AND ps.season = $2
@@ -355,8 +354,8 @@ async def leaderboard(ctx: SamuroSlashContext) -> None:
         medal = "🥇" if i == 1 else "🥈" if i == 2 else "🥉" if i == 3 else f"{i}. "
         winrate = round((record["win"] / (record["win"] + record["lose"])) * 100 if record["win"] + record["lose"] > 0 else 0)
         description.append(
-            f"{medal} <@{record['id']}> ({record['league']})\n"
-            f"⭐ Очки: {record['points']} | 📊 {record['win']} Win/{record['lose']} Lose ({winrate}%)"
+            f"{medal} **{record['btag']}** ({record['league']})\n"
+            f"⭐ Очки: {record['points']} | 📊 {record['win']}Win/{record['lose']}Lose ({winrate}%)"
         )
 
     embed.description = "\n\n".join(description)

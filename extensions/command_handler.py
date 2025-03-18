@@ -71,7 +71,6 @@ async def log_exc_to_channel(
 
 
 async def application_error_handler(ctx: SamuroContext, error: BaseException) -> None:
-
     if isinstance(error, lightbulb.CheckFailure):
         error = error.causes[0] if error.causes else error.__cause__ if error.__cause__ else error
 
@@ -175,7 +174,6 @@ async def application_error_handler(ctx: SamuroContext, error: BaseException) ->
         return
 
     if isinstance(error, lightbulb.CommandInvocationError):
-
         if isinstance(error.original, errors.UserBlacklistedError):
             await ctx.respond(
                 embed=hikari.Embed(
@@ -236,7 +234,7 @@ async def application_error_handler(ctx: SamuroContext, error: BaseException) ->
                 embed=hikari.Embed(
                     title="❌ Нет игр в штормовой лиге",
                     description="На сайте `heroesprofile.com` не найдены игры в лиге.\n"
-                                "Пожалуйста загрузите реплеи на сайт и повторите попытку",
+                    "Пожалуйста загрузите реплеи на сайт и повторите попытку",
                     color=const.ERROR_COLOR,
                 ),
                 flags=hikari.MessageFlag.EPHEMERAL,

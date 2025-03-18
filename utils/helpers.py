@@ -110,8 +110,8 @@ async def get_userinfo(ctx: SamuroContext, user: hikari.User) -> hikari.Embed:
 **• Ник:** `{member.nickname or "-"}`
 **• ID:** `{member.id}`
 **• Бот:** `{member.is_bot}`
-**• Дата создания аккаунта:** {format_dt(member.created_at)} ({format_dt(member.created_at, style='R')})
-**• Присоединился:** {format_dt(member.joined_at)} ({format_dt(member.joined_at, style='R')})
+**• Дата создания аккаунта:** {format_dt(member.created_at)} ({format_dt(member.created_at, style="R")})
+**• Присоединился:** {format_dt(member.joined_at)} ({format_dt(member.joined_at, style="R")})
 **• Сквад:** {"   ".join(get_badges(member)) or "`-`"}
 **• Предупреждений:** `{db_user.warns}`
 **• Таймаут:** {f"Until: {format_dt(comms_disabled_until)}" if comms_disabled_until is not None else "`-`"}
@@ -131,7 +131,7 @@ async def get_userinfo(ctx: SamuroContext, user: hikari.User) -> hikari.Embed:
 **• Ник:** `-`
 **• ID:** `{user.id}`
 **• Бот:** `{user.is_bot}`
-**• Дата создания аккаунта:** {format_dt(user.created_at)} ({format_dt(user.created_at, style='R')})
+**• Дата создания аккаунта:** {format_dt(user.created_at)} ({format_dt(user.created_at, style="R")})
 **• Присоединился:** `-`
 **• Сквад:** {"   ".join(get_badges(user)) or "`-`"}
 **• Предупреждений:** `{db_user.warns}`
@@ -204,7 +204,7 @@ def is_above(me: hikari.Member, member: hikari.Member) -> bool:
 
 
 def can_harm(
-        me: hikari.Member, member: hikari.Member, permission: hikari.Permissions, *, raise_error: bool = False
+    me: hikari.Member, member: hikari.Member, permission: hikari.Permissions, *, raise_error: bool = False
 ) -> bool:
     """
     Returns True if "member" can be harmed by "me", also checks if "me" has "permission".
@@ -358,7 +358,7 @@ async def maybe_edit(message: hikari.PartialMessage, *args, **kwargs) -> None:
 
 
 def format_reason(
-        reason: t.Optional[str] = None, moderator: Optional[hikari.Member] = None, *, max_length: Optional[int] = 512
+    reason: t.Optional[str] = None, moderator: Optional[hikari.Member] = None, *, max_length: Optional[int] = 512
 ) -> str:
     """Format a reason for a moderation action.
 
@@ -409,9 +409,10 @@ def build_note_pages(notes: t.List[str]) -> t.List[hikari.Embed]:
 async def add_emoji(message: hikari.PartialMessage, emojis: list, custom: bool = False) -> None:
     for emoji in emojis:
         if custom:
-            name, id = emoji[2:-1].split(':')
+            name, id = emoji[2:-1].split(":")
             await message.add_reaction(name, int(id))
         else:
             await message.add_reaction(emoji)
+
 
 # by fenrir#5455

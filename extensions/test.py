@@ -35,7 +35,6 @@ class PersistentThing(miru.View):
 
 
 class BasicView(miru.View):
-
     # Define a new Select menu with two options
     @miru.select(
         placeholder="Select me!",
@@ -110,7 +109,6 @@ async def modaltest(ctx: SamuroSlashContext) -> None:
 @lightbulb.command("navtest", "Test miru nav")
 @lightbulb.implements(lightbulb.SlashCommand)
 async def navtest(ctx: SamuroSlashContext) -> None:
-
     buttons = [nav.FirstButton(), nav.PrevButton(), nav.StopButton(), nav.NextButton(), nav.LastButton()]
 
     navigator = nav.NavigatorView(pages=["1", "2", "3"], buttons=buttons)

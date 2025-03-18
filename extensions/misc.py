@@ -224,7 +224,6 @@ async def about(ctx: SamuroSlashContext) -> None:
 @lightbulb.command("invite", "Пригласить бота на свой сервер!")
 @lightbulb.implements(lightbulb.SlashCommand)
 async def invite(ctx: SamuroSlashContext) -> None:
-
     if not ctx.app.dev_mode:
         invite_url = f"https://discord.com/oauth2/authorize?client_id={ctx.app.user_id}&permissions=1494984682710&scope=applications.commands%20bot"
         await ctx.respond(
@@ -292,7 +291,7 @@ async def serverinfo(ctx: SamuroSlashContext) -> None:
 **• Ролей:** `{len(guild.get_roles())}`
 **• Каналов:** `{len(guild.get_channels())}`
 **• Уровень Nitro:** `{guild.premium_tier}`
-**• Nitro Boost подписчики:** `{guild.premium_subscription_count or '*Not found*'}`
+**• Nitro Boost подписчики:** `{guild.premium_subscription_count or "*Not found*"}`
 **• Язык:** `{guild.preferred_locale}`
 **• Сообщество:** `{"Yes" if "COMMUNITY" in guild.features else "No"}`
 **• Discord партнер:** `{"Yes" if "PARTNERED" in guild.features else "No"}`
@@ -350,7 +349,8 @@ async def echo(ctx: SamuroSlashContext, text: str, channel: t.Optional[hikari.In
     await send_to.send(text[:2000])
 
     await ctx.respond(
-        embed=hikari.Embed(title="✅ Сообщение отправлено!", color=const.EMBED_GREEN), flags=hikari.MessageFlag.EPHEMERAL
+        embed=hikari.Embed(title="✅ Сообщение отправлено!", color=const.EMBED_GREEN),
+        flags=hikari.MessageFlag.EPHEMERAL,
     )
 
 
@@ -365,7 +365,6 @@ async def echo(ctx: SamuroSlashContext, text: str, channel: t.Optional[hikari.In
 @lightbulb.command("edit", "Отредактировать сообщение отправленное ботом", pass_options=True)
 @lightbulb.implements(lightbulb.SlashCommand)
 async def edit(ctx: SamuroSlashContext, message_link: str) -> None:
-
     message = await helpers.parse_message_link(ctx, message_link)
     if not message:
         return
@@ -431,7 +430,8 @@ async def edit(ctx: SamuroSlashContext, message_link: str) -> None:
     await message.edit(content=content)
 
     await modal.get_response_context().respond(
-        embed=hikari.Embed(title="✅ Сообщение отредактировано!", color=const.EMBED_GREEN), flags=hikari.MessageFlag.EPHEMERAL
+        embed=hikari.Embed(title="✅ Сообщение отредактировано!", color=const.EMBED_GREEN),
+        flags=hikari.MessageFlag.EPHEMERAL,
     )
 
 
@@ -458,7 +458,9 @@ async def raw(ctx: SamuroMessageContext, target: hikari.Message) -> None:
 
 
 @misc.command
-@lightbulb.option("timezone", "Часовой пояс, который будет установлен по-умолчанию. Example: 'Europe/Kiev'", autocomplete=True)
+@lightbulb.option(
+    "timezone", "Часовой пояс, который будет установлен по-умолчанию. Example: 'Europe/Kiev'", autocomplete=True
+)
 @lightbulb.command(
     "timezone", "Устанавливает часовой пояс для других команд, связанных со временем.", pass_options=True
 )
@@ -522,9 +524,7 @@ async def tz_opts(
     required=False,
 )
 @lightbulb.option("time", "Создание временной метки. Пример: 'через 20 минут', '2022-04-03', '21:43'")
-@lightbulb.command(
-    "timestamp", "Создание временной метки в Discord формате", pass_options=True
-)
+@lightbulb.command("timestamp", "Создание временной метки в Discord формате", pass_options=True)
 @lightbulb.implements(lightbulb.SlashCommand)
 async def timestamp_gen(ctx: SamuroSlashContext, time: str, style: t.Optional[str] = None) -> None:
     try:

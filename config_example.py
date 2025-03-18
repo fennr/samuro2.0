@@ -20,5 +20,6 @@ class Config:
     DEBUG_GUILDS: t.Sequence[int] = (123, 456, 789)  # Commands will only be registered here if DEV_MODE is on
 
     OWNER: int = 196583204164075520
-    
+
+
 # by fenrir#5455

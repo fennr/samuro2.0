@@ -13,11 +13,13 @@ class Buttons:
     Exit: str
     ColorLogs: str
 
+
 @dataclass(frozen=True)
 class Titles:
     ModSettings: str
     LogSettings: str
     ChannelNotFound: str
+
 
 @dataclass(frozen=True)
 class Descriptions:
@@ -37,11 +39,7 @@ button = Buttons(
 )
 
 title = Titles(
-    ModSettings="Настройки модерации",
-    LogSettings="Настройки логгирования",
-    ChannelNotFound="❌ Канал не найден"
+    ModSettings="Настройки модерации", LogSettings="Настройки логгирования", ChannelNotFound="❌ Канал не найден"
 )
 
-desc = Descriptions(
-    ChannelNotFound="Не удалось найти канал. Введите ID канала"
-)
+desc = Descriptions(ChannelNotFound="Не удалось найти канал. Введите ID канала")

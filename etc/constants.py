@@ -46,19 +46,19 @@ hots_jsons = {
     "heroesdata": f"etc/hots/heroesdata_{spatch}.json",
     "gamestrings": f"etc/hots/gamestrings_{spatch}_ruru.json",
     "master_opinion": "etc/hots/pancho.json",
-    "stlk_builds": "etc/hots/stlk.json"
+    "stlk_builds": "etc/hots/stlk.json",
 }
 
 try:
-    with open(hots_jsons["ru_heroesdata"], encoding='utf-8') as file:
+    with open(hots_jsons["ru_heroesdata"], encoding="utf-8") as file:
         ru_heroesdata = json.load(file)
-    with open(hots_jsons["heroesdata"], encoding='utf-8') as file:
+    with open(hots_jsons["heroesdata"], encoding="utf-8") as file:
         heroesdata = json.load(file)
-    with open(hots_jsons["gamestrings"], encoding='utf-8') as file:
+    with open(hots_jsons["gamestrings"], encoding="utf-8") as file:
         gamestrings = json.load(file)
-    with open(hots_jsons["master_opinion"], encoding='utf-8') as file:
+    with open(hots_jsons["master_opinion"], encoding="utf-8") as file:
         master_opinion = json.load(file)
-    with open(hots_jsons["stlk_builds"], encoding='utf-8') as file:
+    with open(hots_jsons["stlk_builds"], encoding="utf-8") as file:
         stlk_builds = json.load(file)
 except:
     print("Невозможно загрузить данные о героях")

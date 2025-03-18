@@ -177,7 +177,6 @@ async def unload_cmd(ctx: SamuroPrefixContext, extension_name: str) -> None:
 @lightbulb.command("py", "Run code.", pass_options=True)
 @lightbulb.implements(lightbulb.PrefixCommand)
 async def eval_py(ctx: SamuroPrefixContext, code: str) -> None:
-
     globals_dict = {
         "_author": ctx.author,
         "_bot": ctx.bot,
@@ -241,7 +240,6 @@ def unload(bot: SamuroBot) -> None:
 @lightbulb.command("sh", "Run code.", pass_options=True)
 @lightbulb.implements(lightbulb.PrefixCommand)
 async def eval_sh(ctx: SamuroPrefixContext, code: str) -> None:
-
     await run_shell(ctx, code)
 
 

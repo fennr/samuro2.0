@@ -52,6 +52,7 @@ class HeroLeagues(str, enum.Enum):
 
 class EventTypes(str, enum.Enum):
     """Enum типов эвентов"""
+
     event5x5 = "5x5"
     event1x4 = "1x4"
     unranked = "unranked"
@@ -73,7 +74,7 @@ def check_type(type, members):
     if type in [EventTypes.event5x5, EventTypes.unranked, EventTypes.manual5x5, EventTypes.tournament]:
         if len(members) != 10:
             raise errors.BadPlayersCount
-    elif type == '1x4':
+    elif type == "1x4":
         if len(members) != 5:
             raise errors.BadPlayersCount
     else:
@@ -94,13 +95,12 @@ async def fix_league_by_mmr(ctx: SamuroSlashContext):
     )
     for record in records:
         guild_id = int(record.get("guild_id"))
-        member_id = int(record.get('id'))
+        member_id = int(record.get("id"))
         player = await HotsPlayer.fetch(member_id, guild_id)
         await player.update()
 
 
-
-async def matchmaking_5x5(ctx: SamuroSlashContext, type: str, players_str: str, manual:bool = False):
+async def matchmaking_5x5(ctx: SamuroSlashContext, type: str, players_str: str, manual: bool = False):
     """Подбор 5х5"""
 
     players_id = util.players_parse(players_str)
@@ -122,8 +122,7 @@ async def matchmaking_5x5(ctx: SamuroSlashContext, type: str, players_str: str, 
         unique_mmr.append(player.mmr)
     if not manual:
         players.sort(key=sort_by_mmr, reverse=True)
-        team_one_mmr, team_two_mmr = util.min_diff_sets(
-            [player.mmr for index, player in enumerate(players[:-2])])
+        team_one_mmr, team_two_mmr = util.min_diff_sets([player.mmr for index, player in enumerate(players[:-2])])
         team_one_mmr += (players[-1].mmr,)
         team_two_mmr += (players[-2].mmr,)
         team_one = [player for player in players if player.mmr in team_one_mmr]
@@ -139,7 +138,9 @@ async def _has_active_event(ctx: SamuroSlashContext):
 
     record = await ctx.app.db.fetchrow(
         """SELECT * FROM event_history WHERE guild_id = $1 AND room_id = $2 AND active = $3""",
-        ctx.guild_id, ctx.channel_id, True
+        ctx.guild_id,
+        ctx.channel_id,
+        True,
     )
     if record:
         return record
@@ -200,8 +201,7 @@ class HotsHero:
         name_url = self.en.lower().replace(".", "").replace("'", "")
         self.heroespatchnotes: str = f"https://heroespatchnotes.com/hero/{name_url.replace(' ', '')}.html"
         self.heroesprofile: str = (
-            f"https://www.heroesprofile.com/Global/Talents/?hero={self.en.replace(' ', '+')}"
-            f"&league_tier=master,diamond"
+            f"https://www.heroesprofile.com/Global/Talents/?hero={self.en.replace(' ', '+')}&league_tier=master,diamond"
         )
         stlk_builds = const.stlk_builds[self.id]
         self.stlk: str = "💬 " + stlk_builds["comment1"] + "\n```" + stlk_builds["build1"] + "```"
@@ -238,19 +238,19 @@ class HotsHero:
                 description=f"{self.description}",
                 color=const.EMBED_BLUE,
             )
-                .set_thumbnail(self.avatar)
-                .add_field(
+            .set_thumbnail(self.avatar)
+            .add_field(
                 name="Сложность",
                 value=str(self.complexity),
                 inline=True,
             )
-                .add_field(name="Мнение мастера", value=self.master_opinion, inline=True)
-                .add_field(
+            .add_field(name="Мнение мастера", value=self.master_opinion, inline=True)
+            .add_field(
                 name="Ссылки",
                 value=f"[Патчноуты]({self.heroespatchnotes})\n[Винрейт по талантам]({self.heroesprofile})",
                 inline=True,
             )
-                .add_field(name="Билды", value=self.stlk, inline=False)
+            .add_field(name="Билды", value=self.stlk, inline=False)
         )
         return embed
 
@@ -283,8 +283,8 @@ class HotsHero:
                 description=f"{self.description}",
                 color=const.EMBED_BLUE,
             )
-                .set_thumbnail(self.avatar)
-                .add_field(name="Билды от Сталка", value=self.stlk, inline=False)
+            .set_thumbnail(self.avatar)
+            .add_field(name="Билды от Сталка", value=self.stlk, inline=False)
         )
         return embed
 
@@ -353,11 +353,16 @@ class PlayerStats(DatabaseModel):
             self.win,
             self.lose,
             self.winstreak,
-            self.max_ws
+            self.max_ws,
         )
 
     @classmethod
-    async def clear(cls, user: hikari.SnowflakeishOr[hikari.PartialUser], guild: hikari.SnowflakeishOr[hikari.PartialGuild], battle_tag) -> None:
+    async def clear(
+        cls,
+        user: hikari.SnowflakeishOr[hikari.PartialUser],
+        guild: hikari.SnowflakeishOr[hikari.PartialGuild],
+        battle_tag,
+    ) -> None:
         return cls(
             hikari.Snowflake(user),
             hikari.Snowflake(guild),
@@ -367,18 +372,21 @@ class PlayerStats(DatabaseModel):
             lose=0,
             winstreak=0,
             max_ws=0,
-            season=const.hots_season
+            season=const.hots_season,
         )
 
     @classmethod
     async def fetch(
-            cls, user: hikari.SnowflakeishOr[hikari.PartialUser], guild: hikari.SnowflakeishOr[hikari.PartialGuild],
-            btag: str) -> None:
+        cls,
+        user: hikari.SnowflakeishOr[hikari.PartialUser],
+        guild: hikari.SnowflakeishOr[hikari.PartialGuild],
+        btag: str,
+    ) -> None:
         season = await cls._db.fetchval(
             """
             SELECT season FROM global_config where guild_id = $1
             """,
-            hikari.Snowflake(guild)
+            hikari.Snowflake(guild),
         )
         record = await cls._db.fetchrow(
             """
@@ -386,7 +394,7 @@ class PlayerStats(DatabaseModel):
             """,
             hikari.Snowflake(user),
             hikari.Snowflake(guild),
-            season
+            season,
         )
         if not record:
             return cls(
@@ -399,7 +407,7 @@ class PlayerStats(DatabaseModel):
                 winstreak=0,
                 max_ws=0,
                 season=season,
-                achievements=None
+                achievements=None,
             )
         achievements = await cls._db.fetch(
             """
@@ -410,7 +418,7 @@ class PlayerStats(DatabaseModel):
             """,
             hikari.Snowflake(user),
             hikari.Snowflake(guild),
-            season
+            season,
         )
         return cls(
             id=hikari.Snowflake(record.get("id")),
@@ -422,7 +430,7 @@ class PlayerStats(DatabaseModel):
             winstreak=record.get("winstreak"),
             max_ws=record.get("max_ws"),
             season=record.get("season"),
-            achievements=achievements
+            achievements=achievements,
         )
 
 
@@ -458,13 +466,14 @@ class HotsPlayer(DatabaseModel):
         for record in records:
             mmr = str(record.get("delta_mmr"))
             if mmr != "0":
-                mmr = '+' + mmr if record.get("winner") else '-' + mmr
+                mmr = "+" + mmr if record.get("winner") else "-" + mmr
             result = const.EMOJI_GREEN_UP if record.get("winner") else const.EMOJI_RED_DOWN
             paginator.add_line(f"{result} ID: {record.get('event_id')} {record.get('map')} ({mmr})")
 
         embeds = [
-            hikari.Embed(title=f"Матчи {self.battle_tag}\nРезультат, ID, Карта, ММР", description=page, color=const.EMBED_BLUE)
-                .set_thumbnail(self.member.avatar_url)
+            hikari.Embed(
+                title=f"Матчи {self.battle_tag}\nРезультат, ID, Карта, ММР", description=page, color=const.EMBED_BLUE
+            ).set_thumbnail(self.member.avatar_url)
             for page in paginator.build_pages()
         ]
         return embeds
@@ -505,11 +514,10 @@ class HotsPlayer(DatabaseModel):
             admin.id,
             now,
             type,
-            message
+            message,
         )
 
     async def add_stats_info(self, embed: hikari.Embed) -> hikari.Embed:
-
         league_rating = ""
         # Позиция в рейтинге
         record = await self._db.fetchrow(
@@ -530,7 +538,7 @@ class HotsPlayer(DatabaseModel):
             WHERE pl.id = $2
             """,
             HeroLeagues(self.league).name.capitalize(),
-            self.id
+            self.id,
         )
         if record:
             league_rating = f"• Позиция в лиге _{self.league}_: `{record.get('league_rating')}`"
@@ -542,7 +550,7 @@ class HotsPlayer(DatabaseModel):
 • Побед: `{self.stats.win or "-"}`
 • Поражений: `{self.stats.lose or "-"}`  
 • Лучший винстрик: `{self.stats.max_ws or "-"}`      
-            """
+            """,
         )
 
         # Ставки
@@ -550,7 +558,7 @@ class HotsPlayer(DatabaseModel):
             """
             SELECT * FROM vote_log WHERE id = $1
             """,
-            self.id
+            self.id,
         )
         correct = 0
         wrong = 0
@@ -564,17 +572,16 @@ class HotsPlayer(DatabaseModel):
             embed.add_field(
                 name="Ставки",
                 value=f"""• Верных: `{correct or "-"}`  
-• Ошибочных: `{wrong or "-"}`  """
+• Ошибочных: `{wrong or "-"}`  """,
             )
 
         return embed
 
     async def add_achievements_info(self, embed: hikari.Embed) -> hikari.Embed:
-        text = "\n".join(f"• {a.get('name')}: <t:{int(a.get('timestamp').timestamp())}:D>" for a in self.stats.achievements)
-        embed.add_field(
-            name="Достижения",
-            value=text
+        text = "\n".join(
+            f"• {a.get('name')}: <t:{int(a.get('timestamp').timestamp())}:D>" for a in self.stats.achievements
         )
+        embed.add_field(name="Достижения", value=text)
         return embed
 
     async def update(self) -> None:
@@ -591,7 +598,7 @@ class HotsPlayer(DatabaseModel):
             self.mmr,
             self.league,
             self.division,
-            self.blocked
+            self.blocked,
         )
 
     async def update_stats(self, winner: bool, points: int) -> None:
@@ -620,10 +627,13 @@ class HotsPlayer(DatabaseModel):
 
     def get_league_division(self) -> (str, int):
         league, division = next(
-            x[1][0].split(sep='.') for x in enumerate(reversed(util.flatten_mmr.items())) if x[1][1] < self.mmr)
+            x[1][0].split(sep=".") for x in enumerate(reversed(util.flatten_mmr.items())) if x[1][1] < self.mmr
+        )
         return league, int(division)
 
-    async def add_log(self, event_id: int, winner: bool, mmr: int, points: int, map: str, type: str = EventTypes.event5x5):
+    async def add_log(
+        self, event_id: int, winner: bool, mmr: int, points: int, map: str, type: str = EventTypes.event5x5
+    ):
         await self._db.execute(
             """INSERT INTO event_log (id, guild_id, event_id, winner, points, delta_mmr, map, season, type) 
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
@@ -638,7 +648,7 @@ class HotsPlayer(DatabaseModel):
             mmr,
             map,
             self.stats.season,
-            type
+            type,
         )
 
     async def ending_5x5(self, event_id: int, mmr: int, points: int, winner: bool, map: str) -> None:
@@ -659,31 +669,34 @@ class HotsPlayer(DatabaseModel):
 
     async def read_mmr(self, battletag: str) -> int:
         mmr_url = None
-        user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) ' \
-                     'Chrome/42.0.2311.135 Safari/537.36 Edge/12.246 '
-        bname = battletag.replace('#', '%23')
-        url = 'https://www.heroesprofile.com/Search/?searched_battletag=' + bname
+        user_agent = (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/42.0.2311.135 Safari/537.36 Edge/12.246 "
+        )
+        bname = battletag.replace("#", "%23")
+        url = "https://www.heroesprofile.com/Search/?searched_battletag=" + bname
         resp = requests.get(url, headers={"User-Agent": f"{user_agent}"})
-        if 'Profile' in resp.url:
-            mmr_url = resp.url.replace('Profile', 'MMR')
+        if "Profile" in resp.url:
+            mmr_url = resp.url.replace("Profile", "MMR")
         else:
-            soup = BeautifulSoup(resp.text, 'html.parser')
-            multi_account = soup.find('div', attrs={'id': 'choose_battletag'})
-            region = 'ion=2'
+            soup = BeautifulSoup(resp.text, "html.parser")
+            multi_account = soup.find("div", attrs={"id": "choose_battletag"})
+            region = "ion=2"
             if multi_account:
-                links = multi_account.find_all('a')
+                links = multi_account.find_all("a")
                 for link in links:
-                    if region in link['href']:
-                        mmr_url = 'https://www.heroesprofile.com' + link['href'].replace('®', '&reg').replace('Profile',
-                                                                                                              'MMR')
+                    if region in link["href"]:
+                        mmr_url = "https://www.heroesprofile.com" + link["href"].replace("®", "&reg").replace(
+                            "Profile", "MMR"
+                        )
 
         if mmr_url:
             resp = requests.get(mmr_url, headers={"User-Agent": f"{user_agent}"})
-            soup = BeautifulSoup(resp.text, 'html.parser')
-            mmr_table = soup.find('div', attrs={'class': 'gray-band-background table-section'})
-            mmr_h3 = mmr_table.find('h3')
+            soup = BeautifulSoup(resp.text, "html.parser")
+            mmr_table = soup.find("div", attrs={"class": "gray-band-background table-section"})
+            mmr_h3 = mmr_table.find("h3")
             try:
-                text, mmr_str = mmr_h3.text.split(': ')
+                text, mmr_str = mmr_h3.text.split(": ")
                 mmr = int(mmr_str)
                 return mmr if mmr > 2200 else 2200
             except ValueError:
@@ -695,7 +708,7 @@ class HotsPlayer(DatabaseModel):
             return hikari.Embed(
                 title="❌ Ошибка сравнения",
                 description="Выберите другого игрока для сравнения с собой",
-                color=const.ERROR_COLOR
+                color=const.ERROR_COLOR,
             )
 
         pl2 = await HotsPlayer.fetch(player2, self.guild_id)
@@ -709,11 +722,15 @@ class HotsPlayer(DatabaseModel):
                 ORDER BY A.event_id DESC
             """,
             self.id,
-            pl2.id
+            pl2.id,
         )
 
         if not records:
-            return hikari.Embed(title=f"🔍 История матчей с {pl2.battle_tag}", description="Общих игр не найдено", color=const.EMBED_YELLOW)
+            return hikari.Embed(
+                title=f"🔍 История матчей с {pl2.battle_tag}",
+                description="Общих игр не найдено",
+                color=const.EMBED_YELLOW,
+            )
 
         else:
             win_together = 0
@@ -739,30 +756,19 @@ class HotsPlayer(DatabaseModel):
             embed = hikari.Embed(
                 title=f"🔍 История матчей с {pl2.battle_tag}",
                 description=f"Общее количество матчей - `{len(records)}`",
-                color=const.EMBED_BLUE
+                color=const.EMBED_BLUE,
             )
             embed.add_field(
-                name="Союзники",
-                value=f"• Побед: `{win_together}`\n• Поражений: `{lose_together}`",
-                inline=True
+                name="Союзники", value=f"• Побед: `{win_together}`\n• Поражений: `{lose_together}`", inline=True
             )
             embed.add_field(
-                name="Соперники",
-                value=f"• Побед: `{win_versus}`\n• Поражений: `{lose_versus}`",
-                inline=True
+                name="Соперники", value=f"• Побед: `{win_versus}`\n• Поражений: `{lose_versus}`", inline=True
             )
             return embed
 
-
-
-
     @classmethod
     async def add(cls, member: hikari.Member, battletag: str, mmr: int):
-        record = await cls._db.fetchrow(
-            """SELECT * FROM players WHERE id = $1 OR btag = $2""",
-            member.id,
-            battletag
-        )
+        record = await cls._db.fetchrow("""SELECT * FROM players WHERE id = $1 OR btag = $2""", member.id, battletag)
         if record:
             logger.warning("Профиль уже создан")
             raise errors.HasProfile
@@ -789,7 +795,7 @@ class HotsPlayer(DatabaseModel):
             profile.guild_id,
             profile.mmr,
             profile.league,
-            profile.division
+            profile.division,
         )
 
         # дозаполнить данные
@@ -843,7 +849,7 @@ class HotsPlayer(DatabaseModel):
             league=leagues.get(record.get("league")),
             division=record.get("division"),
             stats=await PlayerStats.fetch(record.get("id"), guild_id, record.get("btag")),
-            blocked=record.get("blocked")
+            blocked=record.get("blocked"),
         )
 
     @classmethod
@@ -880,7 +886,7 @@ class HotsPlayer(DatabaseModel):
             league=leagues.get(record.get("league")),
             division=record.get("division"),
             stats=await PlayerStats.fetch(record.get("id"), guild, record.get("btag")),
-            blocked=record.get("blocked")
+            blocked=record.get("blocked"),
         )
 
 
@@ -916,19 +922,28 @@ class HotsEvent(DatabaseModel):
             self.guild_id,
             self.room_id,
             self.winner,
-            self.active
+            self.active,
         )
 
     @classmethod
-    async def init(cls, time: datetime, ctx: SamuroSlashContext, type: str, win_p: int, lose_p: int, delta_mmr: int,
-                   map: str, players: str):
+    async def init(
+        cls,
+        time: datetime,
+        ctx: SamuroSlashContext,
+        type: str,
+        win_p: int,
+        lose_p: int,
+        delta_mmr: int,
+        map: str,
+        players: str,
+    ):
         if await _has_active_event(ctx):
             raise errors.HasActiveEvent
         season = await cls._db.fetchval(
             """
             SELECT season FROM global_config where guild_id = $1
             """,
-            hikari.Snowflake(ctx.guild_id)
+            hikari.Snowflake(ctx.guild_id),
         )
         event_id = None
         blue = red = []
@@ -950,11 +965,28 @@ class HotsEvent(DatabaseModel):
                         )
                 RETURNING event_id
                 """,
-                time, ctx.guild_id, None, True,
-                blue[0].battle_tag, blue[1].battle_tag, blue[2].battle_tag, blue[3].battle_tag, blue[4].battle_tag,
-                red[0].battle_tag, red[1].battle_tag, red[2].battle_tag, red[3].battle_tag, red[4].battle_tag,
-                ctx.channel_id, delta_mmr, lose_p, ctx.author.username, type, win_p, season, map
-
+                time,
+                ctx.guild_id,
+                None,
+                True,
+                blue[0].battle_tag,
+                blue[1].battle_tag,
+                blue[2].battle_tag,
+                blue[3].battle_tag,
+                blue[4].battle_tag,
+                red[0].battle_tag,
+                red[1].battle_tag,
+                red[2].battle_tag,
+                red[3].battle_tag,
+                red[4].battle_tag,
+                ctx.channel_id,
+                delta_mmr,
+                lose_p,
+                ctx.author.username,
+                type,
+                win_p,
+                season,
+                map,
             )
 
         return cls(
@@ -984,11 +1016,7 @@ class HotsEvent(DatabaseModel):
 
         await self._db.execute("""DELETE FROM event_history WHERE event_id = $1""", record.get("event_id"))
 
-        return hikari.Embed(
-            title="Матч отменен",
-            description="Можно пересоздать команды",
-            color=const.EMBED_GREEN
-        )
+        return hikari.Embed(title="Матч отменен", description="Можно пересоздать команды", color=const.EMBED_GREEN)
 
     @classmethod
     async def get_active_event(cls, ctx: SamuroSlashContext):
@@ -998,12 +1026,12 @@ class HotsEvent(DatabaseModel):
             raise errors.NoActiveEvent
 
         blue_btags = [
-                record.get("blue1"),
-                record.get("blue2"),
-                record.get("blue3"),
-                record.get("blue4"),
-                record.get("blue5"),
-            ]
+            record.get("blue1"),
+            record.get("blue2"),
+            record.get("blue3"),
+            record.get("blue4"),
+            record.get("blue5"),
+        ]
         red_btags = [record.get("red1"), record.get("red2"), record.get("red3"), record.get("red4"), record.get("red5")]
 
         blue = [await HotsPlayer.btag_fetch(x, ctx.guild_id) for x in blue_btags]
@@ -1025,18 +1053,18 @@ class HotsEvent(DatabaseModel):
             blue=blue,
             red=red,
             season=record.get("season"),
-            map=record.get("map")
+            map=record.get("map"),
         )
 
     async def update_winner(self):
         await self._db.execute(
-        """
+            """
             INSERT INTO event_history (event_id, winner)
             VALUES ($1, $2)
             ON CONFLICT (event_id) DO
             UPDATE SET winner = $2""",
-        self.id,
-        self.winner
+            self.id,
+            self.winner,
         )
 
     async def ending_description(self, winner: EventWinner) -> hikari.Embed:
@@ -1044,18 +1072,10 @@ class HotsEvent(DatabaseModel):
         embed = hikari.Embed(
             title=f"Победила команда {winner.upper()}",
             description=f"ID матча: {self.id}\nКарта: {self.map}",
-            color=color
+            color=color,
         )
-        embed.add_field(
-            name="Blue",
-            value='\n'.join([x.mention for x in self.blue]),
-            inline=True
-        )
-        embed.add_field(
-            name="Red",
-            value='\n'.join([x.mention for x in self.red]),
-            inline=True
-        )
+        embed.add_field(name="Blue", value="\n".join([x.mention for x in self.blue]), inline=True)
+        embed.add_field(name="Red", value="\n".join([x.mention for x in self.red]), inline=True)
         return embed
 
     async def vote_log(self, winner):
@@ -1065,7 +1085,7 @@ class HotsEvent(DatabaseModel):
             SELECT * FROM votes 
             WHERE event_id = $1""",
             self.id,
-            )
+        )
         for record in records:
             flag = False
             if record.get("vote") == winner:
@@ -1079,7 +1099,7 @@ class HotsEvent(DatabaseModel):
                 """,
                 record.get("id"),
                 record.get("event_id"),
-                flag
+                flag,
             )
 
     async def ending(self, ctx: SamuroSlashContext, winner: EventWinner) -> hikari.Embed:
@@ -1089,19 +1109,33 @@ class HotsEvent(DatabaseModel):
         loser_team = self.blue if self.winner == EventWinner.RED else self.red
         if self.type in [EventTypes.event5x5, EventTypes.manual5x5]:
             for player in winner_team:
-                await player.ending_5x5(event_id=self.id, mmr=self.delta_mmr, points=self.win_points, winner=True,
-                                        map=self.map)
+                await player.ending_5x5(
+                    event_id=self.id, mmr=self.delta_mmr, points=self.win_points, winner=True, map=self.map
+                )
             for player in loser_team:
-                await player.ending_5x5(event_id=self.id, mmr=self.delta_mmr, points=self.lose_points, winner=False,
-                                        map=self.map)
+                await player.ending_5x5(
+                    event_id=self.id, mmr=self.delta_mmr, points=self.lose_points, winner=False, map=self.map
+                )
         elif self.type == EventTypes.unranked or self.type == EventTypes.tournament:
             self.delta_mmr = 0
             for player in winner_team:
-                await player.ending_unranked(event_id=self.id, mmr=self.delta_mmr, points=self.win_points, winner=True,
-                                             map=self.map, type=self.type)
+                await player.ending_unranked(
+                    event_id=self.id,
+                    mmr=self.delta_mmr,
+                    points=self.win_points,
+                    winner=True,
+                    map=self.map,
+                    type=self.type,
+                )
             for player in loser_team:
-                await player.ending_unranked(event_id=self.id, mmr=self.delta_mmr, points=self.win_points, winner=False,
-                                             map=self.map, type=self.type)
+                await player.ending_unranked(
+                    event_id=self.id,
+                    mmr=self.delta_mmr,
+                    points=self.win_points,
+                    winner=False,
+                    map=self.map,
+                    type=self.type,
+                )
         else:
             pass  # другие типы ивентов
 
@@ -1115,21 +1149,11 @@ class HotsEvent(DatabaseModel):
     def description(self):
         map_img = util.maps_url + self.map.replace(" ", "-").lower() + "/main.jpg"
         embed = hikari.Embed(
-            title=f"Матч #{self.id} в режиме {self.type}",
-            description=f"Карта: {self.map}",
-            color=const.EMBED_GREEN
+            title=f"Матч #{self.id} в режиме {self.type}", description=f"Карта: {self.map}", color=const.EMBED_GREEN
         )
         embed.set_thumbnail(map_img)
-        embed.add_field(
-            name="Blue",
-            value='\n'.join([f"{x.mention} - {x.mmr}" for x in self.blue]),
-            inline=True
-        )
-        embed.add_field(
-            name="Red",
-            value='\n'.join([f"{x.mention} - {x.mmr}" for x in self.red]),
-            inline=True
-        )
+        embed.add_field(name="Blue", value="\n".join([f"{x.mention} - {x.mmr}" for x in self.blue]), inline=True)
+        embed.add_field(name="Red", value="\n".join([f"{x.mention} - {x.mmr}" for x in self.red]), inline=True)
         return embed
 
     async def add_log(self):
@@ -1148,7 +1172,7 @@ class HotsEvent(DatabaseModel):
                 points,
                 self.delta_mmr,
                 self.map,
-                self.season
+                self.season,
             )
 
         for player in self.red:
@@ -1166,16 +1190,14 @@ class HotsEvent(DatabaseModel):
                 points,
                 self.delta_mmr,
                 self.map,
-                self.season
+                self.season,
             )
         logger.info(f"Событие #{self.id} добавлено")
 
     @classmethod
     async def fetch(cls, event_id: int, guild_id: int):
-
         record = await cls._db.fetchrow(
-            """SELECT * FROM event_history WHERE event_id = $1 AND guild_id = $2""",
-            event_id, guild_id
+            """SELECT * FROM event_history WHERE event_id = $1 AND guild_id = $2""", event_id, guild_id
         )
 
         if not record:
@@ -1209,7 +1231,7 @@ class HotsEvent(DatabaseModel):
             blue=blue,
             red=red,
             season=record.get("season"),
-            map=record.get("map")
+            map=record.get("map"),
         )
 
     @classmethod
@@ -1217,7 +1239,7 @@ class HotsEvent(DatabaseModel):
         records = await cls._db.fetch(
             """SELECT * FROM event_history WHERE guild_id = $1
             ORDER BY event_id DESC""",
-            guild_id
+            guild_id,
         )
         if not records:
             return []
@@ -1262,35 +1284,19 @@ class HotsEvent(DatabaseModel):
         embed = hikari.Embed(
             title=f"Матч #{self.id}",
             description=f"{self.ftime}\nВедущий: {self.admin}\nКарта: {self.map}\nПобедитель: **{winner}**",
-            color=const.EMBED_BLUE
+            color=const.EMBED_BLUE,
         )
         embed.set_thumbnail(map_img)
-        embed.add_field(
-            name="Blue",
-            value='\n'.join([x.mention for x in self.blue]),
-            inline=True
-        )
-        embed.add_field(
-            name="Red",
-            value='\n'.join([x.mention for x in self.red]),
-            inline=True
-        )
+        embed.add_field(name="Blue", value="\n".join([x.mention for x in self.blue]), inline=True)
+        embed.add_field(name="Red", value="\n".join([x.mention for x in self.red]), inline=True)
         return embed
 
     def result(self) -> hikari.Embed:
         embed = hikari.Embed(
             title=f"Матч #{self.id}",
             description=f"{self.ftime}\nВедущий: {self.admin}\nПобедитель: **{self.winner}**",
-            color=const.EMBED_BLUE
+            color=const.EMBED_BLUE,
         )
-        embed.add_field(
-            name="Blue",
-            value='\n'.join([x.mention for x in self.blue]),
-            inline=True
-        )
-        embed.add_field(
-            name="Red",
-            value='\n'.join([x.mention for x in self.red]),
-            inline=True
-        )
+        embed.add_field(name="Blue", value="\n".join([x.mention for x in self.blue]), inline=True)
+        embed.add_field(name="Red", value="\n".join([x.mention for x in self.red]), inline=True)
         return embed

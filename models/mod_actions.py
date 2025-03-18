@@ -10,7 +10,7 @@ import hikari
 import lightbulb
 import miru
 
-#from miru.abc import ViewItem
+# from miru.abc import ViewItem
 from etc import constants as const
 from models.db_user import DatabaseUser, DatabaseUserFlag
 from models.errors import DMFailedError, RoleHierarchyError
@@ -209,10 +209,10 @@ class ModActions:
 
         view = miru.View.from_message(event.message)
 
-        '''for item in view.children:
+        """for item in view.children:
             assert isinstance(item, ViewItem)
             if item.custom_id == event.custom_id:
-                item.disabled = True'''
+                item.disabled = True"""
 
         try:
             await event.message.edit(components=view)
@@ -243,7 +243,6 @@ class ModActions:
                 return
 
             if expiry - helpers.utcnow().timestamp() > MAX_TIMEOUT_SECONDS:
-
                 await event.app.scheduler.create_timer(
                     helpers.utcnow() + datetime.timedelta(seconds=MAX_TIMEOUT_SECONDS),
                     TimerEvent.TIMEOUT_EXTEND,
@@ -704,7 +703,9 @@ class ModActions:
                 await self.app.scheduler.cancel_timer(record.get("id"), moderator.guild_id)
 
             if soft:
-                await self.app.rest.unban_user(moderator.guild_id, user.id, reason="Автоматическая разблокировка после софтбана")
+                await self.app.rest.unban_user(
+                    moderator.guild_id, user.id, reason="Автоматическая разблокировка после софтбана"
+                )
 
             elif duration:
                 await self.app.scheduler.create_timer(

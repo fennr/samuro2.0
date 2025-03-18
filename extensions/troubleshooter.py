@@ -72,7 +72,6 @@ PERM_DESCRIPTIONS = {
 @lightbulb.command("troubleshoot", "Диагностика возможных проблем")
 @lightbulb.implements(lightbulb.SlashCommand)
 async def troubleshoot(ctx: SamuroSlashContext) -> None:
-
     assert ctx.guild_id is not None
 
     me = ctx.app.cache.get_member(ctx.guild_id, ctx.app.user_id)

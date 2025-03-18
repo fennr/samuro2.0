@@ -90,17 +90,17 @@ class BadPlayersCount(Exception):
     Количество игроков не соответствует режиму
     """
 
+
 class NoActiveEvent(Exception):
     """
     Нет активных событий
     """
 
+
 class HasActiveEvent(Exception):
     """
     Есть активный ивент
     """
-
-
 
 
 # by fenrir#5455
